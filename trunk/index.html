@@ -1,0 +1,612 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+
+<title>Image Quality Assessment Test</title>
+
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+<style type="text/css">
+
+#form_participant_information > ul
+{
+	padding-left: 0;
+}
+
+#form_participant_information li
+{
+	list-style: none;
+}
+
+#form_participant_information > ul > li
+{
+	padding: 1.5em;
+}
+
+#form_participant_information > ul > li:nth-child(odd)
+{
+	color: inherit;
+	background-color: rgb(204, 204, 204);
+}
+
+#form_participant_information > ul > li:nth-child(even)
+{
+	color: inherit;
+	background-color: rgb(238, 238, 238);
+}
+
+</style>
+
+<script type="text/javascript" src="utils.js"></script>
+
+<script type="text/javascript" src="iqatest.js"></script>
+
+</head>
+
+<body onload="javascript:iqatest.initialize();">
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<noscript style="color: red;">
+<p>JavaScript is disabled. You must <a href="http://www.google.com/search?q=enable+JavaScript">enable JavaScript</a> to participate in this experiment.</p>
+</noscript>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_informed_consent" style="display: block;">
+
+<h2>Informed Consent</h2>
+
+<h3>Principal Investigators</h3>
+<p>Julian Abich, Jeremy Flynn, David Poole, Steve Ward</p>
+
+<h3>Introduction</h3>
+<p>Researchers at the University of Central Florida (UCF) study many topics.  To do this, we need the help of people who agree to participate in a research study.  You are being invited to participate in a research study for our graduate-level course because the researchers are investigating how people perceive distortion in compressed images.  You must be 18 years of age or older to be included in this research study and give consent at the bottom of this form.  You can read this form and agree to participate now or later (if you choose).</p>
+
+<h3>What you should know about this research study</h3>
+<ul>
+<li>This research study will be explained to you.</li>
+<li>This research study is voluntary.</li>
+<li>You can agree to participate now and later change your mind.</li>
+<li>Whatever you decide, it will not be held against you.</li>
+<li>Feel free to ask all the questions you want before you decide.</li>
+</ul>
+
+<h3>Purpose of the research study</h3>
+<p>We are investigating the threshold at which the typical human visual system can perceive image distortions.</p>
+
+<h3>What you will be asked to do in the study</h3>
+<p>This study involves completing a questionnaire about your demographic information. Next, you will be asked to compare pairs of images and decide if the images are identical or different.</p>
+
+<h3>Location</h3>
+<p>This is a web-based study, so you can complete the study wherever you have a computer and internet access.</p>
+
+<h3>Time required</h3>
+<p>This research study may take up to 1 hour.</p>
+
+<h3>Risks</h3>
+<p>There is a small risk that people who participate will develop eye strain or fatigue. It occurs sometimes to people who are exposed to prolonged, continuous visual scanning. The risk is minimized by allowing you to work at your own pace, as well as providing a break at any point during the study. If you choose to withdraw from the study at any time, there will be no penalty.</p>
+
+<h3>Benefits</h3>
+<p>There are no expected benefits to you for participating in this study.</p>
+
+<h3>Compensation or payment</h3>
+<p>No compensation or payment will be given for participating in this study. The results of the research study may be published, but your personal information will not be used.</p>
+
+<h3>Confidentiality</h3>
+<p>We will limit your personal data collected in this study to people who have a need to review this information. We cannot promise complete secrecy.</p>
+
+<h3>Contact information</h3>
+<!-- MAINTAINER: change the email address below -->
+<p>If you have questions, concerns, or complaints, contact Julian Abich, Jeremy Flynn, David Poole, or Steve Ward by email at <a href="mailto:question@email.com">question@email.com</a>.</p>
+
+<button type="button" onclick="javascript:set_element_style_display_none('div_informed_consent'); scrollTo(0,0); reset_element_style_display('form_participant_information');">I agree to participate</button>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<form id="form_participant_information" style="display: none;" action="">
+
+<h2>Participant Information</h2>
+
+<p>Please complete as much of this form as you want. None of the fields are required.</p>
+
+<ul>
+
+<li>
+	Age:
+	<input id="age" name="age" type="text" size="3" />
+	(years)
+</li>
+
+<li>
+	Sex:
+	<label><input name="sex" type="radio" value="Male"   />Male  </label>&nbsp;
+	<label><input name="sex" type="radio" value="Female" />Female</label>
+</li>
+
+<li>
+	Is English your primary language?
+	<label><input name="language" type="radio" value="Yes" />Yes</label>&nbsp;
+	<label><input name="language" type="radio" value="No"  />No </label>
+</li>
+
+<li>
+	Is your vision normal or corrected to normal?
+	<label><input name="vision_normal" type="radio" value="Yes" />Yes</label>&nbsp;
+	<label><input name="vision_normal" type="radio" value="No"  />No </label>
+</li>
+
+<li>
+	Do you require vision correction such as glasses or contact lenses?
+	<label><input name="vision_correction_necessary" type="radio" onclick="javascript:reset_element_style_display('optional_vision_correction_necessary');" value="Yes" />Yes</label>&nbsp;
+	<label><input name="vision_correction_necessary" type="radio" onclick="javascript:set_element_style_display_none('optional_vision_correction_necessary'); reset_radio_button_checked_properties('vision_correction_used');" value="No" />No</label>&nbsp;
+
+	<ul id="optional_vision_correction_necessary" style="display: none;">
+	<li>
+		Are you using them now?
+		<label><input name="vision_correction_used" type="radio" value="Yes" />Yes</label>&nbsp;
+		<label><input name="vision_correction_used" type="radio" value="No"  />No</label>
+	</li>
+	</ul>
+</li>
+
+<li>
+	Do you have any experience with image processing or photo editing?
+	<label><input name="image_experience" type="radio" value="Yes" />Yes</label>&nbsp;
+	<label><input name="image_experience" type="radio" value="No"  />No </label>
+</li>
+
+<li>
+	How many hours did you sleep in the last 24 hours?
+	<input id="sleep_time" name="sleep_time" type="text" size="2" />
+	(hours)
+</li>
+
+<li>
+	How many hours per week (on average) do you spend using a <strong>computer</strong>?
+	<input id="computer_time" name="computer_time" type="text" size="3" />
+	(hours/week)
+</li>
+
+<li>
+	How do you rate your proficiency with <strong>computers</strong>?<br />
+	<label><input name="computer_proficiency" type="radio" value="1" />1 = very poor     </label>&nbsp;
+	<label><input name="computer_proficiency" type="radio" value="2" />2 = poor          </label>&nbsp;
+	<label><input name="computer_proficiency" type="radio" value="3" />3 = slightly poor </label>&nbsp;
+	<label><input name="computer_proficiency" type="radio" value="4" />4 = average       </label>&nbsp;
+	<label><input name="computer_proficiency" type="radio" value="5" />5 = slightly good </label>&nbsp;
+	<label><input name="computer_proficiency" type="radio" value="6" />6 = good          </label>&nbsp;
+	<label><input name="computer_proficiency" type="radio" value="7" />7 = very good     </label>
+</li>
+
+<li>
+	How many hours per week (on average) do you spend playing (computer or console) <strong>video games</strong>?
+	<input id="videogame_time" name="videogame_time" type="text" size="3" />
+	(hours/week)
+</li>
+
+<li>
+	How do you rate your proficiency with <strong>video games</strong>?<br />
+	<label><input name="videogame_proficiency" type="radio" value="1" />1 = very poor     </label>&nbsp;
+	<label><input name="videogame_proficiency" type="radio" value="2" />2 = poor          </label>&nbsp;
+	<label><input name="videogame_proficiency" type="radio" value="3" />3 = slightly poor </label>&nbsp;
+	<label><input name="videogame_proficiency" type="radio" value="4" />4 = average       </label>&nbsp;
+	<label><input name="videogame_proficiency" type="radio" value="5" />5 = slightly good </label>&nbsp;
+	<label><input name="videogame_proficiency" type="radio" value="6" />6 = good          </label>&nbsp;
+	<label><input name="videogame_proficiency" type="radio" value="7" />7 = very good     </label>
+</li>
+
+<li>
+	Are you currently under the influence of any substances?
+	<label><input name="substance_influence" type="radio" onclick="javascript:reset_element_style_display('optional_substance_influence');" value="Yes" />Yes</label>&nbsp;
+	<label><input name="substance_influence" type="radio" onclick="javascript:set_element_style_display_none('optional_substance_influence'); reset_element_property('substances', 'value');" value="No" />No</label>
+
+	<ul id="optional_substance_influence" style="display: none;">
+	<li>
+		What substances?
+		<input id="substances" name="substances" type="text" />
+	</li>
+	</ul>
+</li>
+
+<li>
+	What is the highest level of school you completed or the highest degree you received?
+	<select id="education" size="1">
+		<option selected="selected"></option>
+		<option>Less than 9th grade</option>
+		<option>9th grade</option>
+		<option>10th grade</option>
+		<option>11th grade</option>
+		<option>12th grade (but no diploma)</option>
+		<option>High school diploma or the equivalent (e.g., GED)</option>
+		<option>Some college (but no degree)</option>
+		<option>Associate's degree (e.g., AA, AS)</option>
+		<option>Bachelor's degree (e.g., BA, BS)</option>
+		<option>Master's degree (e.g., MA, MS, MBA, MEd, MSW)</option>
+		<option>Professional Doctoral degree (e.g., MD, JD, DDS)</option>
+		<option>Research Doctoral degree (e.g., PhD, EdD)</option>
+	</select>
+</li>
+
+</ul>
+
+<div>
+
+<button type="reset">Reset</button>
+
+<button type="button" onclick="javascript:if (iqatest.store_participant_information()) {set_element_style_display_none('form_participant_information'); scrollTo(0,0); reset_element_style_display('div_instructions_first');}">Continue to instructions</button>
+
+</div>
+
+</form>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_instructions_first" style="display: none;">
+
+<h2>Instructions</h2>
+
+<p>We are investigating how much distortion can be applied to an image before the distortion is perceived by a typical human observer.</p>
+
+<p>You will compare several pairs of <a href="http://en.wikipedia.org/wiki/Grayscale">grayscale</a> images side-by-side and determine if they are identical or different.  In all cases, one of the two images is a reference (i.e. non-distorted) image.  The other image is a copy of the reference image with a distortion (of varying degrees) possibly applied.  If there is a distortion applied, it may be subtle or severe.</p>
+
+<p>When comparing the images, you should consider them to be <em>identical</em> if you <em>cannot</em> perceive a difference between them.  You should consider them to be <em>different</em> if you <em>can</em> perceive a difference between them.  Whichever conclusion you draw, click the appropriate button (i.e. "Identical" or "Different").</p>
+
+<p>No feedback will be given after you make your comparisons.</p>
+
+<p>After a comparison is made, there is a small period in which the pair of images will disappear, the buttons will be disabled, a new pair of images will be presented, and the buttons will be enabled.  Continue making comparisons until your results are submitted.  When your results are submitted, you will be redirected to another page.</p>
+
+<p>Before you begin making image comparisons, there is a brief practice session to make you familiar with the process.</p>
+
+<button type="button" onclick="javascript:set_element_style_display_none('div_instructions_first'); scrollTo(0,0); setTimeout('reset_element_style_display(\'div_practice_image_comparison_1\');', iqatest.interstimulus_interval);">Begin practice image comparison</button>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_practice_image_comparison_1" style="display: none;">
+
+<h2>Practice Image Comparison</h2>
+
+<p>These images are <em>different</em>.  One of them has a severe distortion.</p>
+
+<p>Severe distortions are noticeable by their blockiness.  A distorted image may appear on either the left side or the right side.</p>
+
+<p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
+
+<table style="margin-left: auto; margin-right: auto; text-align: center;">
+
+<tr>
+	<th colspan="2">Are the images identical or different?</th>
+</tr>
+
+<tr>
+	<td><img src="images/practice_set/distorted_severe.jpg" alt="image A" /></td>
+	<td><img src="images/practice_set/reference.png" alt="image B" /></td>
+</tr>
+
+<tr>
+	<!--
+	<td colspan="2"><button type="button" onclick="javascript:set_element_style_display_none('div_practice_image_comparison_1'); scrollTo(0,0); setTimeout('reset_element_style_display(\'div_practice_image_comparison_2\');', iqatest.interstimulus_interval);">Identical</button></td>
+	-->
+	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button type="button" onclick="javascript:set_element_style_display_none('div_practice_image_comparison_1'); scrollTo(0,0); setTimeout('reset_element_style_display(\'div_practice_image_comparison_2\');', iqatest.interstimulus_interval);">Different</button></td>
+</tr>
+
+</table>
+
+<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+
+<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
+
+<!-- MAINTAINER: change the email address below -->
+<p>If you have any questions or concerns, please send an email to <a href="mailto:question@email.com">question@email.com</a></p>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_practice_image_comparison_2" style="display: none;">
+
+<h2>Practice Image Comparison</h2>
+
+<p>These images are <em>identical</em>.</p>
+
+<p>There is a chance that both images will be the same.</p>
+
+<p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
+
+<table style="margin-left: auto; margin-right: auto; text-align: center;">
+
+<tr>
+	<th colspan="2">Are the images identical or different?</th>
+</tr>
+
+<tr>
+	<td><img src="images/practice_set/reference.png" alt="image A" /></td>
+	<td><img src="images/practice_set/reference.png" alt="image B" /></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button type="button" onclick="javascript:set_element_style_display_none('div_practice_image_comparison_2'); scrollTo(0,0); setTimeout('reset_element_style_display(\'div_practice_image_comparison_3\');', iqatest.interstimulus_interval);">Identical</button></td>
+</tr>
+
+<tr>
+	<!--
+	<td colspan="2"><button type="button" onclick="javascript:set_element_style_display_none('div_practice_image_comparison_2'); scrollTo(0,0); setTimeout('reset_element_style_display(\'div_practice_image_comparison_3\');', iqatest.interstimulus_interval);">Different</button></td>
+	-->
+	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Different</button></td>
+</tr>
+
+</table>
+
+<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+
+<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
+
+<!-- MAINTAINER: change the email address below -->
+<p>If you have any questions or concerns, please send an email to <a href="mailto:question@email.com">question@email.com</a></p>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_practice_image_comparison_3" style="display: none;">
+
+<h2>Practice Image Comparison</h2>
+
+<p>These images are <em>slightly different</em>.  One of them has a subtle distortion.</p>
+
+<p>Subtle distortions are most noticeable in gradients and around edges.</p>
+
+<p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
+
+<table style="margin-left: auto; margin-right: auto; text-align: center;">
+
+<tr>
+	<th colspan="2">Are the images identical or different?</th>
+</tr>
+
+<tr>
+	<td><img src="images/practice_set/reference.png" alt="image A" /></td>
+	<td><img src="images/practice_set/distorted_subtle.jpg" alt="image B" /></td>
+</tr>
+
+<tr>
+	<!--
+	<td colspan="2"><button type="button" onclick="javascript:set_element_style_display_none('div_practice_image_comparison_3'); scrollTo(0,0); reset_element_style_display('div_instructions_last');">Identical</button></td>
+	-->
+	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button type="button" onclick="javascript:set_element_style_display_none('div_practice_image_comparison_3'); scrollTo(0,0); reset_element_style_display('div_instructions_last');">Different</button></td>
+</tr>
+
+</table>
+
+<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+
+<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
+
+<!-- MAINTAINER: change the email address below -->
+<p>If you have any questions or concerns, please send an email to <a href="mailto:question@email.com">question@email.com</a></p>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_instructions_last" style="display: none;">
+
+<h2>Instructions</h2>
+
+<p>Now that the practice is done, you're ready to make some image comparisons.</p>
+
+<p>There are no correct or incorrect answers.</p>
+
+<p>There is no time limit.  However, it is recommended that you don't spend too much time comparing each pair of images.</p>
+
+<button type="button" onclick="javascript:set_element_style_display_none('div_instructions_last'); scrollTo(0,0); reset_element_style_display('div_image_comparison');">Begin image comparison</button>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_image_comparison" style="display: none;">
+
+<table style="margin-left: auto; margin-right: auto; text-align: center;">
+
+<tr>
+	<th colspan="2">Are the images identical or different?</th>
+</tr>
+
+<tr>
+	<td><img id="img_A" src="" alt="image A" /></td>
+	<td><img id="img_B" src="" alt="image B" /></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button id="button_identical" type="button" onclick="javascript:iqatest.process_image_comparison(true);">Identical</button></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button id="button_different" type="button" onclick="javascript:iqatest.process_image_comparison(false);">Different</button></td>
+</tr>
+
+</table>
+
+<div style="display: none;">
+image <span id="image_progress"></span><br />
+image set <span id="image_set_progress"></span>
+</div>
+
+<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+
+<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
+
+<!-- MAINTAINER: change the email address below -->
+<p>If you have any questions or concerns, please send an email to <a href="mailto:question@email.com">question@email.com</a></p>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<form id="form_results" style="display: none;" action="submit-results.php" method="post" onsubmit="return iqatest.encode_results();">
+
+<h2>Submit Results</h2>
+
+<div>
+
+<!-- the "name" attribute is necessary for the data to be sent -->
+<input type="hidden" id="results" name="results" value="" />
+
+<button type="submit">Submit Results</button>
+
+</div>
+
+</form>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_images" style="display: none;">
+<img alt="reference image" src="images/sets/albert_einstein/reference.png" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_12.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_14.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_17.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_22.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_28.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_38.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_57.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_75.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_89.jpg" />
+<img alt="distorted image" src="images/sets/albert_einstein/distorted_100.jpg" />
+<img alt="reference image" src="images/sets/arnisee_region/reference.png" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_22.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_27.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_35.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_45.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_59.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_71.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_80.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_87.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_93.jpg" />
+<img alt="distorted image" src="images/sets/arnisee_region/distorted_100.jpg" />
+<img alt="reference image" src="images/sets/bald_eagle/reference.png" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_8.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_10.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_12.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_15.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_20.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_27.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_41.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_66.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_87.jpg" />
+<img alt="distorted image" src="images/sets/bald_eagle/distorted_100.jpg" />
+<img alt="reference image" src="images/sets/desiccated_sewage/reference.png" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_13.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_16.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_20.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_26.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_34.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_45.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_61.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_73.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_85.jpg" />
+<img alt="distorted image" src="images/sets/desiccated_sewage/distorted_100.jpg" />
+<img alt="reference image" src="images/sets/red_apple/reference.png" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_10.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_12.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_14.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_18.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_24.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_35.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_54.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_75.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_89.jpg" />
+<img alt="distorted image" src="images/sets/red_apple/distorted_100.jpg" />
+<img alt="reference image" src="images/sets/sonderho_windmill/reference.png" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_10.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_12.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_15.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_20.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_26.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_37.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_55.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_73.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_88.jpg" />
+<img alt="distorted image" src="images/sets/sonderho_windmill/distorted_100.jpg" />
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_debug" style="display: none;">
+[<a href="http://validator.w3.org/check/referer">Valid XHTML 1.1</a>]
+[<a href="http://jigsaw.w3.org/css-validator/check/referer">Valid CSS</a>]
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+</body>
+
+</html>

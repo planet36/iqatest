@@ -1,0 +1,28 @@
+
+/* Copyright (C) 2010 Steve Ward */
+
+
+body
+{
+	color: black;
+	background-color: rgb(221, 221, 221);
+}
+
+
+label
+{
+	border: thin dotted transparent;
+}
+
+
+label:hover
+{
+	border-color: black;
+
+}
+
+
+button
+{
+	padding: 1.5em;
+}
