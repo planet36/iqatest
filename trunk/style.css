@@ -43,3 +43,70 @@ button
 {
 	padding: 1.5em;
 }
+
+
+#form_participant_information li
+{
+	list-style: none;
+}
+
+
+#form_participant_information > ul
+{
+	padding-left: 0;
+}
+
+
+#form_participant_information > ul > li
+{
+	padding: 1.5em;
+}
+
+
+#form_participant_information > ul > li:nth-child(odd),
+#table_image_credits tr:nth-child(odd)
+{
+	color: inherit;
+	background-color: rgb(204, 204, 204);
+}
+
+
+#form_participant_information > ul > li:nth-child(even),
+#table_image_credits tr:nth-child(even)
+{
+	color: inherit;
+	background-color: rgb(238, 238, 238);
+}
+
+
+.centered
+{
+	margin-left: auto;
+	margin-right: auto;
+
+	text-align: center;
+}
+
+
+#div_progress
+{
+	color: inherit;
+	background-color: rgb(238, 238, 238);
+
+	border: thin solid gray;
+}
+
+
+#table_image_credits
+{
+	border-collapse: collapse;
+}
+
+
+#table_image_credits th,
+#table_image_credits td
+{
+	margin: 0;
+	border: thin solid gray;
+	padding: 0.5em;
+}
