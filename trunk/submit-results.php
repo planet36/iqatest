@@ -23,12 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
 
-// turn on output buffering
-
-if (!ob_start())
-{
-	exit("ob_start() failed.");
-}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -329,7 +323,7 @@ catch (Exception $e)
 
 ?>
 
-<p>The results of this study will be released after May 1, 2010.</p>
+<p>The results of this study will be released after December 31, 2010.</p>
 
 <p><a href="image_credits.html">Image Credits</a></p>
 
@@ -341,13 +335,3 @@ catch (Exception $e)
 </body>
 
 </html>
-<?php
-
-// turn off output buffering
-
-if (!ob_end_flush())
-{
-	exit("ob_end_flush() failed.");
-}
-
-?>
