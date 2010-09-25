@@ -16,4 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-tar --verbose --create --auto-compress --file archive-$(date +'%Y-%m-%d-%H-%M-%S').tar.bz2 *.html *.js *.php *.css *.txt
+tar --verbose --create --auto-compress --file archive-$(date +'%Y-%m-%d-%H-%M-%S').tar.bz2 *.html *.js *.php *.css *.txt || exit 1
+
+chmod go-rwx archive-* || exit 1
