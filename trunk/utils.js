@@ -18,9 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
 //------------------------------------------------------------------------------
 
+
+/*
+
+JS array references/tutorials:
+
+http://www.hunlock.com/blogs/Mastering_Javascript_Arrays
+
+http://code.google.com/p/jslibs/wiki/JavascriptTips
+
+*/
+
+
+//------------------------------------------------------------------------------
 
 
 // utility for getElementById
@@ -46,9 +58,7 @@ function id(x)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // utility for getElementsByName
@@ -74,9 +84,7 @@ function name(x)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // get the current time
@@ -90,9 +98,7 @@ function get_current_time()
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // repeat a string a number of times
@@ -109,14 +115,14 @@ function string_repeat(str, int_n)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // get the sum of all the elements in an array
 function array_sum(arr)
 {
+	// the Array.reduce method is only available in Firefox 3+
+
 	var sum = 0;
 
 	for (var i = 0; i < arr.length; ++i)
@@ -128,9 +134,7 @@ function array_sum(arr)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // get the average of all the elements in an array
@@ -145,9 +149,7 @@ function array_average(arr)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // get the minimum element in an array
@@ -157,9 +159,7 @@ function array_min(arr)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // get the minimum element in an array
@@ -169,12 +169,7 @@ function array_max(arr)
 }
 
 
-
 //------------------------------------------------------------------------------
-
-
-
-
 
 
 /*
@@ -203,10 +198,7 @@ function array_average(a)
 */
 
 
-
-
 //------------------------------------------------------------------------------
-
 
 
 //##### is this used?
@@ -225,16 +217,7 @@ function create_array(int_n, value)
 }
 
 
-
-
-
-
-
-
-
-
 //------------------------------------------------------------------------------
-
 
 
 // get a random boolean
@@ -244,9 +227,7 @@ function get_random_boolean()
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 /// get a random float in the interval [0, b)
@@ -257,9 +238,7 @@ function get_random_float_1(b)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 /// get a random int in the interval [0, b)
@@ -269,9 +248,7 @@ function get_random_int_1(b)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 /// get a random float in the interval [a, b)
@@ -283,9 +260,7 @@ function get_random_float_2(a, b)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 /// get a random int in the interval [a, b)
@@ -295,20 +270,11 @@ function get_random_int_2(a, b)
 }
 
 
-
 //------------------------------------------------------------------------------
-
-
 
 
 // power law distribution
 // Math.round(Math.exp(Math.random()*Math.log(maxmimum-minimum+1)))+minimum
-
-
-
-
-
-
 
 /*
 function Shuffle(arr)
@@ -344,7 +310,6 @@ function TestShuf()
 */
 
 /*
-
 function shuffle(arr)
 {
 	for (var i = arr.length - 1; i > 0; i--)
@@ -357,10 +322,7 @@ function shuffle(arr)
 */
 
 
-
-
 //------------------------------------------------------------------------------
-
 
 
 // swap the i'th and j'th elements in array 'arr'
@@ -372,12 +334,13 @@ function array_swap_elements(arr, i, j)
 }
 
 
-
 //------------------------------------------------------------------------------
 
 
-
-// shuffle the elements in array 'arr'
+// shuffle the elements in the array
+/*
+/sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+*/
 function array_shuffle(arr)
 {
 	var n = arr.length;
@@ -404,9 +367,7 @@ function array_shuffle(arr)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // set all the radio button checked properties to false
@@ -422,9 +383,7 @@ function reset_radio_button_checked_properties(radio_button_group_name)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 // get the value of the first checked radio button
@@ -440,6 +399,7 @@ function get_radio_button_value(radio_button_group_name)
 		if (elements[i].checked)
 		{
 			result = elements[i].value;
+			break;
 		}
 	}
 
@@ -447,9 +407,7 @@ function get_radio_button_value(radio_button_group_name)
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 function set_element_property(element, property, value)
@@ -465,26 +423,13 @@ function set_element_property(element, property, value)
 }
 
 
-
 function reset_element_property(element, property)
 {
 	set_element_property(element, property, null);
-	/*
-	try
-	{
-		id(element)[property] = null;
-	}
-	catch (e)
-	{
-		alert(e.name + ": " + e.message);
-	}
-	*/
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 function set_element_disabled(element, value)
@@ -493,13 +438,13 @@ function set_element_disabled(element, value)
 }
 
 
-
 function reset_element_disabled(element)
 {
 	reset_element_property(element, "disabled");
-	//set_element_disabled(element, null);
 }
 
+
+//------------------------------------------------------------------------------
 
 
 function set_element_disabled_false(element)
@@ -508,16 +453,13 @@ function set_element_disabled_false(element)
 }
 
 
-
 function set_element_disabled_true(element)
 {
 	set_element_disabled(element, true);
 }
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 function set_element_style_property(element, property, value)
@@ -533,51 +475,36 @@ function set_element_style_property(element, property, value)
 }
 
 
-
 function reset_element_style_property(element, property)
 {
 	set_element_style_property(element, property, "");
-	/*
-	try
-	{
-		id(element).style[property] = "";
-	}
-	catch (e)
-	{
-		alert(e.name + ": " + e.message);
-	}
-	*/
 }
-
 
 
 //------------------------------------------------------------------------------
 
 
-
 function set_element_style_display(element, value)
 {
-	// http://www.w3.org/TR/CSS1/#display
-	// 'display'
-	// Value: block | inline | list-item | none
-	// Initial: block
+/*
+http://www.w3.org/TR/CSS1/#display
+'display'
+Value: block | inline | list-item | none
+Initial: block
 
-	// http://www.w3.org/TR/CSS21/visuren.html#propdef-display
-	// 'display'
-	// Value: inline | block | list-item | run-in | inline-block | table | inline-table | table-row-group | table-header-group | table-footer-group | table-row | table-column-group | table-column | table-cell | table-caption | none | inherit
-	// Initial: inline
-
+http://www.w3.org/TR/CSS21/visuren.html#propdef-display
+'display'
+Value: inline | block | list-item | run-in | inline-block | table | inline-table | table-row-group | table-header-group | table-footer-group | table-row | table-column-group | table-column | table-cell | table-caption | none | inherit
+Initial: inline
+*/
 	set_element_style_property(element, "display", value);
 }
-
 
 
 function reset_element_style_display(element)
 {
 	reset_element_style_property(element, "display");
-	//set_element_style_property(element, "display", "");
 }
-
 
 
 function set_element_style_display_none(element)
@@ -591,29 +518,25 @@ function set_element_style_display_none(element)
 //##### look in CSS1 maybe
 
 
-
 //------------------------------------------------------------------------------
-
 
 
 function set_element_style_visibility(element, value)
 {
-	// http://www.w3.org/TR/CSS21/visufx.html#visibility
-	// 'visibility'
-	// Value: visible | hidden | collapse | inherit
-	// Initial: visible
-
+/*
+http://www.w3.org/TR/CSS21/visufx.html#visibility
+'visibility'
+Value: visible | hidden | collapse | inherit
+Initial: visible
+*/
 	set_element_style_property(element, "visibility", value);
 }
 
 
-
 function reset_element_style_visibility(element)
 {
-	//set_element_style_visibility(element, "");
 	reset_element_style_property(element, "visibility");
 }
-
 
 
 function set_element_style_visibility_hidden(element)
@@ -622,13 +545,8 @@ function set_element_style_visibility_hidden(element)
 }
 
 
-
 //################ add another function for each type of visibility property
 //##### look in CSS1 maybe
 
 
 //------------------------------------------------------------------------------
-
-
-
-
