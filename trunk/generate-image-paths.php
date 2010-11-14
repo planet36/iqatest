@@ -61,146 +61,98 @@ function debug_print($var, $var_name)
 //------------------------------------------------------------------------------
 
 
-$image_sets_path = 'images/sets/';
+$image_set_path = 'images/sets/';
 
-debug_print($image_sets_path, '$image_sets_path');
+debug_print($image_set_path, '$image_set_path');
 
 
-if (!file_exists($image_sets_path))
+//------------------------------------------------------------------------------
+
+
+if (!file_exists($image_set_path))
 {
-	exit('Path to image sets does not exist.');
+	exit(escapeshellarg($image_set_path) . ' does not exist.');
 }
 
 
-if (!is_dir($image_sets_path))
+if (!is_dir($image_set_path))
 {
-	exit('Path to image sets is not a directory.');
+	exit(escapeshellarg($image_set_path) . ' is not a directory.');
 }
 
 
 //------------------------------------------------------------------------------
 
 
-$image_set_names = glob($image_sets_path . '*', GLOB_MARK | GLOB_NOSORT | GLOB_ONLYDIR);
-
-debug_print($image_set_names, '$image_set_names');
-
-
-if ($image_set_names === false)
+if (!chdir($image_set_path))
 {
-	exit('Could not find image sets matching pattern ' . escapeshellarg($image_sets_path . '*') . '.');
+	exit('Could not chdir to ' . escapeshellarg($image_set_path) . '.');
 }
-
-if (natcasesort($image_set_names) == false)
-{
-	exit('Error sorting image sets.');
-}
-
-debug_print($image_set_names, '$image_set_names');
 
 
 //------------------------------------------------------------------------------
 
 
-$reference_image_pattern = 'reference*';
-
-debug_print($reference_image_pattern, '$reference_image_pattern');
-
-
-$distorted_pattern = 'distorted*';
-
-debug_print($distorted_pattern, '$distorted_pattern');
+print 'iqatest.image_set_path = ' . escapeshellarg($image_set_path) . ';';
+print "\n";
+print "\n";
 
 
 //------------------------------------------------------------------------------
 
 
-$image_sets = array();
+print <<<EOT
+// the results to be submitted
+
+iqatest.results = {};
+
+iqatest.results.id         = "";
+iqatest.results.ip_address = "";
+iqatest.results.host_name  = "";
+iqatest.results.user_agent = "";
+
+iqatest.results.screen_properties = {};
+
+iqatest.results.screen_properties.width      = screen.width     ;
+iqatest.results.screen_properties.height     = screen.height    ;
+iqatest.results.screen_properties.colorDepth = screen.colorDepth;
+
+iqatest.results.participant_information = {};
 
 
-foreach($image_set_names as $image_set)
+EOT;
+
+
+//------------------------------------------------------------------------------
+
+
+$image_sets = glob('*', GLOB_NOSORT | GLOB_ONLYDIR);
+
+if ($image_sets === false)
 {
-	debug_print($image_set, '$image_set');
-
-	//--------------------------------------------------------------------------
-	// get the reference image
-
-	$reference_image = glob($image_set . $reference_image_pattern, GLOB_NOSORT);
-
-	debug_print($reference_image, '$reference_image');
-
-	if ($reference_image === false)
-	{
-		exit('Could not find reference image for image set ' . escapeshellarg($image_set) . '.');
-	}
-
-	if (count($reference_image) < 1)
-	{
-		exit('Could not find reference image for image set ' . escapeshellarg($image_set) . '.');
-	}
-
-	if (count($reference_image) > 1)
-	{
-		exit('There may only be one reference image for image set ' . escapeshellarg($image_set) . '.');
-	}
-
-	$reference_image = $reference_image[0];
-
-	debug_print($reference_image, '$reference_image');
-
-	//--------------------------------------------------------------------------
-	// get the distorted images
-
-	$distorted = glob($image_set . $distorted_pattern, GLOB_NOSORT);
-
-	debug_print($distorted, '$distorted');
-
-	if ($distorted === false)
-	{
-		exit('Could not find distorted images for image set ' . escapeshellarg($image_set) . '.');
-	}
-
-	if (count($distorted) < 1)
-	{
-		exit('Could not find distorted images for image set ' . escapeshellarg($image_set) . '.');
-	}
-
-	if (natcasesort($distorted) == false)
-	{
-		exit('Error sorting distorted images.');
-	}
-
-	$distorted = array_values($distorted);
-
-	debug_print($distorted, '$distorted');
-
-	//--------------------------------------------------------------------------
-
-	$image_sets[] = array('reference_image' => $reference_image, 'distorted' => $distorted);
+	exit('"glob" function failed.');
 }
 
+$image_sets_len = count($image_sets);
 
 debug_print($image_sets, '$image_sets');
 
 
-//------------------------------------------------------------------------------
-
-
-foreach ($image_sets as $val)
+if ($image_sets === false)
 {
-	print "<img alt=\"reference image\" src=\"" . $val['reference_image'] . "\" />\n";
-
-	foreach ($val['distorted'] as $val2)
-	{
-		print "<img alt=\"distorted image\" src=\"" . $val2 . "\" />\n";
-	}
+	exit('Could not find image sets matching pattern ' . escapeshellarg($image_set_path . '*') . '.');
 }
-print "\n";
 
 
-$json = json_encode($image_sets);
+if ($debug) {print "// sort(\$image_sets)\n\n";}
 
-debug_print($json, '$json');
+
+if (sort($image_sets) == false)
+{
+	exit('Error sorting image sets.');
+}
+
+debug_print($image_sets, '$image_sets');
 
 
 //------------------------------------------------------------------------------
@@ -221,7 +173,8 @@ An ExpressionStatement cannot start with an opening curly brace because that mig
 
 */
 
-print 'iqatest.image_sets = (' . $json . ');';
+//print 'iqatest.results.image_sets = (' . json_encode($image_sets) . ');';
+print 'iqatest.results.image_sets = ' . json_encode($image_sets) . ';';
 print "\n";
 print "\n";
 
@@ -229,35 +182,232 @@ print "\n";
 //------------------------------------------------------------------------------
 
 
-/*
+$image_set_indexes = range(0, $image_sets_len - 1); // ex: 0...5 (length: 6)
 
-function json_last_error() is only in PHP 5.3.0+
+debug_print($image_set_indexes, '$image_set_indexes');
 
-if (json_last_error() != JSON_ERROR_NONE)
+assert($image_sets_len == count($image_set_indexes));
+
+
+//------------------------------------------------------------------------------
+
+
+print 'iqatest.results.image_set_indexes = ' . json_encode($image_set_indexes) . ';';
+print "\n";
+print "\n";
+
+
+//------------------------------------------------------------------------------
+
+
+$distorted_pattern = 'distorted*';
+
+debug_print($distorted_pattern, '$distorted_pattern');
+
+
+//------------------------------------------------------------------------------
+
+
+$reference_pattern = 'reference*';
+
+debug_print($reference_pattern, '$reference_pattern');
+
+
+//------------------------------------------------------------------------------
+
+
+$images = array();
+
+$image_indexes = array();
+
+$image_comparisons = array();
+
+
+//------------------------------------------------------------------------------
+
+
+if ($debug) {print "//-----------------------------------------------\n\n";}
+
+foreach($image_sets as $image_set)
 {
-	exit("Could not encode images into JSON format.");
+	//--------------------------------------------------------------------------
+
+	debug_print($image_set, '$image_set');
+
+	//--------------------------------------------------------------------------
+
+	if (!chdir($image_set))
+	{
+		exit('Could not chdir to ' . escapeshellarg($image_set) . '.');
+	}
+
+	//--------------------------------------------------------------------------
+	// get the reference image
+
+	$reference = glob($reference_pattern, GLOB_NOSORT);
+
+	//--------------------------------------------------------------------------
+	// validate the reference image
+
+	if ($reference === false)
+	{
+		exit('"glob" function failed.');
+	}
+
+	if (empty($reference))
+	{
+		exit('Could not find reference image for image set ' . escapeshellarg($image_set) . '.');
+	}
+
+	$reference_len = count($reference);
+
+	if ($reference_len > 1)
+	{
+		exit('There may only be one reference image for image set ' . escapeshellarg($image_set) . '.');
+	}
+
+	debug_print($reference, '$reference');
+
+	assert($reference_len == 1);
+
+	//--------------------------------------------------------------------------
+	// get the distorted images
+
+	$distorted = glob($distorted_pattern, GLOB_NOSORT);
+
+	//--------------------------------------------------------------------------
+	// validate the distorted images
+
+	if ($distorted === false)
+	{
+		exit('"glob" function failed.');
+	}
+
+	if (empty($distorted))
+	{
+		exit('Could not find distorted images for image set ' . escapeshellarg($image_set) . '.');
+	}
+
+	$distorted_len = count($distorted);
+
+	debug_print($distorted, '$distorted');
+
+	assert($distorted_len > 0);
+
+	if ($debug) {print "// natcasesort(\$distorted)\n\n";}
+
+	if (natcasesort($distorted) == false)
+	{
+		exit('Error sorting distorted images.');
+	}
+
+	// do not maintain key association
+	$distorted = array_values($distorted);
+
+	debug_print($distorted, '$distorted');
+
+	//--------------------------------------------------------------------------
+
+	// the reference image is at index 0
+
+	$image_set_arr = array_merge($reference, $distorted);
+
+	$image_set_arr_len = count($image_set_arr);
+
+	debug_print($image_set_arr, '$image_set_arr');
+
+	assert($image_set_arr_len == ($reference_len + $distorted_len));
+
+	$images[] = $image_set_arr;
+
+	//--------------------------------------------------------------------------
+
+	// indexes of the distorted images
+	$distorted_indexes = range(1, $distorted_len); // ex: 1...10 (length: 10)
+
+	// indexes of the reference image
+	// the reference image is always index 0
+	$reference_indexes = array_fill($distorted_len, $distorted_len, 0); // ex: 11...20 (length: 10)
+
+	assert(count($distorted_indexes) == count($reference_indexes));
+
+	//--------------------------------------------------------------------------
+
+	// fill the image_indexes array
+
+	$image_index_arr = array_merge($distorted_indexes, $reference_indexes);
+
+	$image_index_arr_len = count($image_index_arr);
+
+	debug_print($image_index_arr, '$image_index_arr');
+
+	// there are twice as many image_indexes as distorted images
+	assert($distorted_len * 2 == $image_index_arr_len);
+
+	$image_indexes[] = $image_index_arr;
+
+	//--------------------------------------------------------------------------
+
+	// fill the image_comparisons array
+
+	$image_comparison_arr = array_fill(0, $image_set_arr_len, 0);
+
+	$image_comparison_arr_len = count($image_comparison_arr);
+
+	debug_print($image_comparison_arr, '$image_comparison_arr');
+
+	assert($image_set_arr_len == $image_comparison_arr_len);
+
+	$image_comparisons[] = $image_comparison_arr;
+
+	//--------------------------------------------------------------------------
+
+	if (!chdir('..'))
+	{
+		exit('Could not chdir to ' . escapeshellarg('..') . '.');
+	}
+
+	//--------------------------------------------------------------------------
+
+	if ($debug) {print "//---------------------------\n\n";}
+
+	//--------------------------------------------------------------------------
+
 }
-*/
-
-
-$json_decoded_1 = json_decode($json);
-
-//##### TODO: check if json_decode fails
-
-debug_print($json_decoded_1, '$json_decoded_1');
 
 
 //------------------------------------------------------------------------------
 
 
-$json_decoded_2 = json_decode($json, true);
+debug_print($images, '$images');
 
-//##### TODO: check if json_decode fails
-
-debug_print($json_decoded_2, '$json_decoded_2');
+print 'iqatest.results.images = ' . json_encode($images) . ';';
+print "\n";
+print "\n";
 
 
 //------------------------------------------------------------------------------
 
+
+debug_print($image_indexes, '$image_indexes');
+
+print 'iqatest.results.image_indexes = ' . json_encode($image_indexes) . ';';
+print "\n";
+print "\n";
+
+
+//------------------------------------------------------------------------------
+
+
+debug_print($image_comparisons, '$image_comparisons');
+
+print 'iqatest.results.image_comparisons = ' . json_encode($image_comparisons) . ';';
+print "\n";
+print "\n";
+
+
+//------------------------------------------------------------------------------
+
+// 568 371 385 388 405
 
 ?>
