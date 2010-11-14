@@ -140,7 +140,7 @@ function array_sum(arr)
 // get the average of all the elements in an array
 function array_average(arr)
 {
-	if (arr.length == 0)
+	if (arr.length === 0)
 	{
 		return 0.0;
 	}
@@ -166,54 +166,6 @@ function array_min(arr)
 function array_max(arr)
 {
 	return Math.max.apply(null, arr);
-}
-
-
-//------------------------------------------------------------------------------
-
-
-/*
-//##### maybe work on this later
-function array_average(a)
-{
-	var r = {mean : 0, variance : 0, deviation : 0};
-
-	var t = a.length;
-
-	for (var m, s = 0, l = t; l--; s += a[l])
-	{
-	}
-
-	for (var m = r.mean = s / t, l = t, s = 0; l--; s += Math.pow(a[l] - m, 2))
-	{
-	}
-
-	return r.deviation = Math.sqrt(r.variance = s / t), r;
-}
-
-/*
-# mean: arithmetic mean of the elements
-# variance: variance
-# deviation: standard deviation
-*/
-
-
-//------------------------------------------------------------------------------
-
-
-//##### is this used?
-// create an array of 'n' elements and initialize them to 'value'
-function create_array(int_n, value)
-{
-	var result = new Array(int_n);
-
-	for (var i = 0; i < int_n; ++i)
-	{
-		result[i] = value;
-		//result.push(0);
-	}
-
-	return result;
 }
 
 
@@ -273,70 +225,6 @@ function get_random_int_2(a, b)
 //------------------------------------------------------------------------------
 
 
-// power law distribution
-// Math.round(Math.exp(Math.random()*Math.log(maxmimum-minimum+1)))+minimum
-
-/*
-function Shuffle(arr)
-{
-    for (var i = arr.length - 1; i > 0; i--)
-	{
-        var j = get_random_int_1(i + 1);
-
-    }
-
-    return arr;
-}
-*/
-
-/*
-function TestShuf()
-{
-    with (document)
-	{
-        write("Iterated full shuffles of A..M :");
-
-        var Q = "ABCDEFGHIKJKLM".split("");
-
-        write("\n   Original    ", Q);
-
-        for (var kk = 1; kk <= 9; kk++)
-		{
-            Shuffle(Q);
-            write("\n   Shuffle ", kk, "   ", Q);
-        }
-    }
-}
-*/
-
-/*
-function shuffle(arr)
-{
-	for (var i = arr.length - 1; i > 0; i--)
-	{
-		var j = get_random_int_1(i + 1);
-
-		array_swap_elements(i, j);
-	}
-}
-*/
-
-
-//------------------------------------------------------------------------------
-
-
-// swap the i'th and j'th elements in array 'arr'
-function array_swap_elements(arr, i, j)
-{
-	var tmp = arr[i];
-	arr[i] = arr[j];
-	arr[j] = tmp;
-}
-
-
-//------------------------------------------------------------------------------
-
-
 // shuffle the elements in the array
 /*
 /sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
@@ -345,16 +233,16 @@ function array_shuffle(arr)
 {
 	var n = arr.length;
 
-	if (n == 0 || n == 1)
+	if ((n === 0) || (n === 1))
 	{
 		return;
 	}
 
 	// for every element
-	for (var i = 0; i < n; ++i)
+	for (var i = 0; i < n - 1; ++i)
 	{
 		// the element to swap
-		var j = get_random_int_1(n);
+		var j = get_random_int_2(i, n);
 
 		if (i == j)
 		{
@@ -362,7 +250,13 @@ function array_shuffle(arr)
 			continue;
 		}
 
-		array_swap_elements(arr, i, j);
+		// parallel assignment is only available in Firefox 2+
+		// [arr[i], arr[j]] = [arr[j], arr[i]];
+
+		// swap
+		var tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
 	}
 }
 
@@ -373,7 +267,6 @@ function array_shuffle(arr)
 // set all the radio button checked properties to false
 function reset_radio_button_checked_properties(radio_button_group_name)
 {
-	//##### hopefully the radio_button_group_name is unique
 	var elements = name(radio_button_group_name);
 
 	for (var i = 0; i < elements.length; ++i)
@@ -391,7 +284,6 @@ function get_radio_button_value(radio_button_group_name)
 {
 	var result = "";
 
-	//##### hopefully the radio_button_group_name is unique
 	var elements = name(radio_button_group_name);
 
 	for (var i = 0; i < elements.length; ++i)
@@ -507,15 +399,28 @@ function reset_element_style_display(element)
 }
 
 
+//------------------------------------------------------------------------------
+
+
+function set_element_style_display_block(element)
+{
+	set_element_style_display(element, "block");
+}
+
+function set_element_style_display_inline(element)
+{
+	set_element_style_display(element, "inline");
+}
+
+function set_element_style_display_list_item(element)
+{
+	set_element_style_display(element, "list-item");
+}
+
 function set_element_style_display_none(element)
 {
 	set_element_style_display(element, "none");
 }
-
-
-
-//################ add another function for each type of display property
-//##### look in CSS1 maybe
 
 
 //------------------------------------------------------------------------------
@@ -539,14 +444,61 @@ function reset_element_style_visibility(element)
 }
 
 
+//------------------------------------------------------------------------------
+
+
+function set_element_style_visibility_visible(element)
+{
+	set_element_style_visibility(element, "visible");
+}
+
 function set_element_style_visibility_hidden(element)
 {
 	set_element_style_visibility(element, "hidden");
 }
 
+function set_element_style_visibility_collapse(element)
+{
+	set_element_style_visibility(element, "collapse");
+}
 
-//################ add another function for each type of visibility property
-//##### look in CSS1 maybe
+function set_element_style_visibility_inherit(element)
+{
+	set_element_style_visibility(element, "inherit");
+}
 
 
 //------------------------------------------------------------------------------
+
+
+// transition display from one element to another element
+function transition_from_to(from_element, to_element)
+{
+	// make the first element not displayed
+	set_element_style_display_none(from_element);
+
+	// scroll to the top of the page
+	scrollTo(0, 0);
+
+	// make the second element displayed
+	reset_element_style_display(to_element);
+}
+
+
+// transition display from one element to another element
+function transition_from_to_timeout(from_element, to_element, delay)
+{
+	// make the first element not displayed
+	set_element_style_display_none(from_element);
+
+	// scroll to the top of the page
+	scrollTo(0, 0);
+
+	// make the second element displayed after the delay
+	setTimeout("reset_element_style_display('" + to_element + "');", delay);
+}
+
+
+//------------------------------------------------------------------------------
+
+// 552 595 571 459 474 505
