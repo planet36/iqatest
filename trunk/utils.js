@@ -21,20 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
 
-/*
-
-JS array references/tutorials:
-
-http://www.hunlock.com/blogs/Mastering_Javascript_Arrays
-
-http://code.google.com/p/jslibs/wiki/JavascriptTips
-
-*/
-
-
-//------------------------------------------------------------------------------
-
-
 // utility for getElementById
 function id(x)
 {
@@ -226,8 +212,8 @@ function get_random_int_2(a, b)
 
 
 // shuffle the elements in the array
-/*
-/sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+/**
+\sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 */
 function array_shuffle(arr)
 {
@@ -500,5 +486,3 @@ function transition_from_to_timeout(from_element, to_element, delay)
 
 
 //------------------------------------------------------------------------------
-
-// 552 595 571 459 474 505
