@@ -144,9 +144,6 @@ if ($image_sets === false)
 }
 
 
-if ($debug) {print "// sort(\$image_sets)\n\n";}
-
-
 if (sort($image_sets) == false)
 {
 	exit('Error sorting image sets.');
@@ -226,8 +223,6 @@ $image_comparisons = array();
 //------------------------------------------------------------------------------
 
 
-if ($debug) {print "//-----------------------------------------------\n\n";}
-
 foreach($image_sets as $image_set)
 {
 	//--------------------------------------------------------------------------
@@ -293,8 +288,6 @@ foreach($image_sets as $image_set)
 	debug_print($distorted, '$distorted');
 
 	assert($distorted_len > 0);
-
-	if ($debug) {print "// natcasesort(\$distorted)\n\n";}
 
 	if (natcasesort($distorted) == false)
 	{
@@ -369,10 +362,6 @@ foreach($image_sets as $image_set)
 
 	//--------------------------------------------------------------------------
 
-	if ($debug) {print "//---------------------------\n\n";}
-
-	//--------------------------------------------------------------------------
-
 }
 
 
@@ -407,7 +396,5 @@ print "\n";
 
 
 //------------------------------------------------------------------------------
-
-// 568 371 385 388 405
 
 ?>
