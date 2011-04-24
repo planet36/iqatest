@@ -60,12 +60,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <h2>Informed Consent</h2>
 
 <h3>Introduction</h3>
+
 <p>This research survey is being conducted by graduate students in the <a href="http://www.ist.ucf.edu/phd/index.html">Modeling and Simulation</a> program at the <a href="http://www.ucf.edu/">University of Central Florida</a>.  The purpose of this research is to investigate a threshold at which a typical human visual system can perceive distortions in compressed images.</p>
 
 <h3>Participation</h3>
 <p>Participation in this survey is voluntary.  You may refuse to participate or you may withdraw at any time without consequences.  To withdraw at any time, close the browser window.  If you withdraw before completion, no results will be submitted.  You must be at least 18 years of age to participate.</p>
 
 <h3>Procedure</h3>
+
 <p>This survey involves the following.</p>
 <ol>
 <li>Completing a brief questionnaire about your demographic information.</li>
@@ -73,23 +75,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </ol>
 
 <h3>Time required</h3>
+
 <p>Completing this survey takes approximately 7 to 15 minutes.  There is no time limit.</p>
 
 <h3>Risks and discomforts</h3>
+
 <p>There is a small risk that participants will develop eye strain or fatigue.  It sometimes happens to people who perform prolonged, continuous visual scanning.  This risk is minimized by allowing participants to work at their own pace and to take breaks at will.</p>
 
 <h3>Confidentiality</h3>
+
 <p>Demographic information will only be used for classification purposes.  No identifying data will be reported.</p>
 
 <h3>How the findings will be used</h3>
+
 <p>The results of this survey will only be used for scholarly purposes.  We intend the results to be presented in educational settings such as conferences and peer-reviewed journals.</p>
 
 <h3>Benefits and compensation</h3>
+
 <p>There are no benefits to participants.  No compensation, payment, or credit will be given for participation.</p>
 
 <h3>Contact information</h3>
-<!-- MAINTAINER: change the email address below -->
-<p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+
+<? include 'question_email_message.html'; ?>
 
 <button type="button" onclick="javascript:transition_from_to('div_informed_consent', 'form_participant_information'); iqatest.initialize();">I agree to participate.</button>
 
@@ -291,6 +298,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
+	<!--
+	<td colspan="2"><button type="button" onclick="javascript:transition_from_to_timeout('div_practice_image_comparison_1', 'div_practice_image_comparison_2', iqatest.interstimulus_interval);">Identical</button></td>
+	-->
 	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
 </tr>
 
@@ -300,12 +310,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+<? include 'perception_instructions_message.html'; ?>
 
-<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
-
-<!-- MAINTAINER: change the email address below -->
-<p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+<? include 'question_email_message.html'; ?>
 
 </div>
 
@@ -341,17 +348,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
+	<!--
+	<td colspan="2"><button type="button" onclick="javascript:transition_from_to_timeout('div_practice_image_comparison_2', 'div_practice_image_comparison_3', iqatest.interstimulus_interval);">Different</button></td>
+	-->
 	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Different</button></td>
 </tr>
 
 </table>
 
-<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+<? include 'perception_instructions_message.html'; ?>
 
-<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
-
-<!-- MAINTAINER: change the email address below -->
-<p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+<? include 'question_email_message.html'; ?>
 
 </div>
 
@@ -383,6 +390,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
+	<!--
+	<td colspan="2"><button type="button" onclick="javascript:transition_from_to('div_practice_image_comparison_3', 'div_instructions_last');">Identical</button></td>
+	-->
 	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
 </tr>
 
@@ -392,12 +402,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+<? include 'perception_instructions_message.html'; ?>
 
-<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
-
-<!-- MAINTAINER: change the email address below -->
-<p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+<? include 'question_email_message.html'; ?>
 
 </div>
 
@@ -454,12 +461,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="div_progress" class="centered" title="progress"></div>
 
-<p>If you <em>can</em> perceive a difference in the images, select <strong>Different</strong>.  If you <em>cannot</em> perceive a difference in the images, or you are unsure if they are different, select <strong>Identical</strong>.</p>
+<? include 'perception_instructions_message.html'; ?>
 
-<p>If you want to withdraw at any time, close this browser window (or tab).  Your results will <em>not</em> be submitted.</p>
-
-<!-- MAINTAINER: change the email address below -->
-<p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+<? include 'question_email_message.html'; ?>
 
 </div>
 
