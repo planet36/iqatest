@@ -28,6 +28,8 @@ require_once 'Mail/mime.php';
 
 require_once 'json_error_to_string.php';
 
+require_once 'submit-results_contact_info.php';
+
 
 //------------------------------------------------------------------------------
 
@@ -194,17 +196,6 @@ if ($bytes_written === false)
 //------------------------------------------------------------------------------
 
 
-// MAINTAINER: change the email address below
-$to = 'results@email.com';
-
-$cc = '';
-
-// MAINTAINER: change the email address below
-$from = 'results@email.com';
-
-// MAINTAINER: change the email address below
-$reply_to = 'results@email.com';
-
 $subject = 'iqatest results ' . $id;
 
 $body_text = '';
@@ -268,7 +259,8 @@ if (!unlink($results_exported_file_name))
 }
 
 
-print "<p>Your results were submitted.  Thank you for participating.</p>\n";
+print "<p>Your results were submitted.</p>\n";
+print "<p>Thanks for your participation.</p>\n";
 
 
 //------------------------------------------------------------------------------
@@ -280,17 +272,6 @@ catch (Exception $e)
 
 //------------------------------------------------------------------------------
 
-
-// MAINTAINER: change the email address below
-$to = 'problem@email.com';
-
-$cc = '';
-
-// MAINTAINER: change the email address below
-$from = 'problem@email.com';
-
-// MAINTAINER: change the email address below
-$reply_to = 'problem@email.com';
 
 $subject = 'iqatest problem ' . $id;
 
@@ -358,10 +339,7 @@ print "<blockquote><p>" . $e->getMessage() . "</p></blockquote>\n";
 
 ?>
 
-<p>Thanks for your participation.</p>
-
-<!-- MAINTAINER: change the email address below -->
-<p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+<? include 'question_email_message.html'; ?>
 
 <p><a href="image_credits.html">Image Credits</a></p>
 
