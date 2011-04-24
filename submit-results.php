@@ -356,16 +356,14 @@ print "<blockquote><p>" . $e->getMessage() . "</p></blockquote>\n";
 
 //------------------------------------------------------------------------------
 
-// 874 865 825 765 458 492 530 629 446 370 359 369
-
 ?>
 
-<p>The results of this study will be released after December 31, 2010.</p>
-
-<p><a href="image_credits.html">Image Credits</a></p>
+<p>Thanks for your participation.</p>
 
 <!-- MAINTAINER: change the email address below -->
 <p>If you have any questions regarding this research survey, please address them to <a href="mailto:question@email.com">question@email.com</a>.</p>
+
+<p><a href="image_credits.html">Image Credits</a></p>
 
 </div>
 
