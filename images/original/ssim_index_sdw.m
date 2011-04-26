@@ -46,6 +46,18 @@ if (nargin < 2 || nargin > 4)
 end
 
 
+# convert a color image to gray-scale
+if (isrgb(img1))
+	img1 = rgb2gray(img1);
+end
+
+
+# convert a color image to gray-scale
+if (isrgb(img2))
+	img2 = rgb2gray(img2);
+end
+
+
 # the images must be gray-scale
 if (!isgray(img1) || !isgray(img2))
 	return;
