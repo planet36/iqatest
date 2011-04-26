@@ -16,36 +16,55 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# example:
+# Usage:
 #
-# time ./calculate_image_metrics.sh ./albert_einstein/{reference.png,distorted*}   | sort --version-sort > ./albert_einstein/metrics.csv
-# time ./calculate_image_metrics.sh ./arnisee_region/{reference.png,distorted*}    | sort --version-sort > ./arnisee_region/metrics.csv
-# time ./calculate_image_metrics.sh ./bald_eagle/{reference.png,distorted*}        | sort --version-sort > ./bald_eagle/metrics.csv
-# time ./calculate_image_metrics.sh ./desiccated_sewage/{reference.png,distorted*} | sort --version-sort > ./desiccated_sewage/metrics.csv
-# time ./calculate_image_metrics.sh ./gizah_pyramids/{reference.png,distorted*}    | sort --version-sort > ./gizah_pyramids/metrics.csv
-# time ./calculate_image_metrics.sh ./red_apple/{reference.png,distorted*}         | sort --version-sort > ./red_apple/metrics.csv
-# time ./calculate_image_metrics.sh ./sonderho_windmill/{reference.png,distorted*} | sort --version-sort > ./sonderho_windmill/metrics.csv
+# time ./calculate_image_metrics.sh ./albert_einstein/{reference.png,distorted*}   | tee >(sort --version-sort > ./albert_einstein/metrics.csv  )
+# time ./calculate_image_metrics.sh ./arnisee_region/{reference.png,distorted*}    | tee >(sort --version-sort > ./arnisee_region/metrics.csv   )
+# time ./calculate_image_metrics.sh ./bald_eagle/{reference.png,distorted*}        | tee >(sort --version-sort > ./bald_eagle/metrics.csv       )
+# time ./calculate_image_metrics.sh ./desiccated_sewage/{reference.png,distorted*} | tee >(sort --version-sort > ./desiccated_sewage/metrics.csv)
+# time ./calculate_image_metrics.sh ./gizah_pyramids/{reference.png,distorted*}    | tee >(sort --version-sort > ./gizah_pyramids/metrics.csv   )
+# time ./calculate_image_metrics.sh ./red_apple/{reference.png,distorted*}         | tee >(sort --version-sort > ./red_apple/metrics.csv        )
+# time ./calculate_image_metrics.sh ./sonderho_windmill/{reference.png,distorted*} | tee >(sort --version-sort > ./sonderho_windmill/metrics.csv)
 #
-# (takes about 5 min. per image set)
+# (takes about 22.6 min. per image set)
 
 
 renice 19 --pid $$ > /dev/null
 
 
-declare -r SCRIPT_NAME="$(basename -- "${0}")"
+SCRIPT_NAME="$(basename -- "${0}")" || exit 1
 
 
 #-------------------------------------------------------------------------------
 
 
-function usage
+function print_version
 {
-	printf "Usage: ${SCRIPT_NAME} [-V] [-h] REFERENCE_IMAGE DISTORTED_IMAGE ...\n"
-	printf "Calculate the image metrics of comparing the REFERENCE_IMAGE to the DISTORTED_IMAGE(s).\n"
-	printf "  -V : Print the version information and exit.\n"
-	printf "  -h : Print this message and exit.\n"
-	printf "  REFERENCE_IMAGE : The reference image.\n"
-	printf "  DISTORTED_IMAGE : The distorted image.\n"
+	cat <<EOT
+${SCRIPT_NAME} 2010-04-24
+Copyright (C) 2011 Steve Ward
+EOT
+}
+
+
+function print_usage
+{
+	cat <<EOT
+Usage: ${SCRIPT_NAME} [-V] [-h] REFERENCE_IMAGE DISTORTED_IMAGE ...
+Calculate the image metrics of comparing the REFERENCE_IMAGE to the DISTORTED_IMAGE(s).
+  -V : Print the version information and exit.
+  -h : Print this message and exit.
+  REFERENCE_IMAGE : The reference image.
+  DISTORTED_IMAGE : The distorted image.
+EOT
+}
+
+
+function print_error
+{
+	printf "Error: ${1}\n" > /dev/stderr
+	print_usage
+	exit 1
 }
 
 
@@ -57,19 +76,18 @@ do
 	case "${option}" in
 
 		V) # version
-			printf "${SCRIPT_NAME} 2010-08-17\n"
-			printf "Copyright (C) 2010 Steve Ward\n"
+			print_version
 			exit
 		;;
 
 		h) # help
-			usage
+			print_usage
 			exit
 		;;
 
 		*)
-			usage
-			exit 1
+			# Note: ${option} is '?'
+			print_error "Option is unknown."
 		;;
 
 	esac
@@ -84,9 +102,7 @@ shift $((OPTIND - 1)) || exit 1
 
 if (($# < 2))
 then
-	printf 'Error: Must give at least 2 files.\n'
-	usage
-	exit 1
+	print_error "Must give at least 2 files."
 fi
 
 
@@ -98,9 +114,7 @@ declare -r REFERENCE_IMAGE="${1}"
 
 if [[ ! -f "${REFERENCE_IMAGE}" ]]
 then
-	printf "Error: File '${REFERENCE_IMAGE}' does not exist.\n"
-	usage
-	exit 1
+	print_error "File '${REFERENCE_IMAGE}' does not exist."
 fi
 
 
@@ -113,16 +127,25 @@ shift || exit 1
 
 function calculate_ssim
 {
+	local local_REFERENCE_IMAGE="${1}"
+	local local_DISTORTED_IMAGE="${2}"
+
 	# '--no-site-file' causes error: 'isgray' undefined
 	# '--no-init-path' causes error: 'pkg' undefined
 
 	cat <<EOT | octave --quiet --no-init-file --no-history --no-line-editing || exit 1
-img_1 = imread('${1}');
-img_2 = imread('${2}');
+img_1 = imread('${local_REFERENCE_IMAGE}');
+img_2 = imread('${local_DISTORTED_IMAGE}');
 [mssim, ssim_map] = ssim_index_sdw(img_1, img_2);
 printf('%f', mssim);
 EOT
 }
+
+
+#-------------------------------------------------------------------------------
+
+
+declare -r -a METRIC_LIST=($(compare -list metric))
 
 
 #-------------------------------------------------------------------------------
@@ -136,7 +159,7 @@ printf ','
 printf 'SSIM'
 
 # other metrics
-for METRIC in $(compare -list metric)
+for METRIC in "${METRIC_LIST[@]}"
 do
 	printf ','
 	printf "${METRIC}"
@@ -152,8 +175,7 @@ do
 
 	if [[ ! -f "${DISTORTED_IMAGE}" ]]
 	then
-		printf "Error: ${DISTORTED_IMAGE} does not exist.\n"
-		exit 1
+		print_error "Distorted image '${DISTORTED_IMAGE}' does not exist."
 	fi
 
 	# distorted image
@@ -167,7 +189,7 @@ do
 	calculate_ssim "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}"
 
 	# other metrics
-	for METRIC in $(compare -list metric)
+	for METRIC in "${METRIC_LIST[@]}"
 	do
 		printf ','
 		# 'tr' is necessary because 'compare' prints a newline
