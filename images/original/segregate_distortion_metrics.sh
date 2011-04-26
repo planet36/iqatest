@@ -16,37 +16,61 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# example:
+# Usage:
 #
 # time ./segregate_distortion_metrics.sh -v $(find -type f -name metrics.csv)
 #
-# (takes about 1 sec. for all metrics files)
+# (takes less than 1 sec. per metrics file)
 
 
 renice 19 --pid $$ > /dev/null
 
 
-declare -r SCRIPT_NAME="$(basename -- "${0}")"
+SCRIPT_NAME="$(basename -- "${0}")" || exit 1
+
+VERBOSE=false
 
 
 #-------------------------------------------------------------------------------
 
 
-function usage
+function print_version
 {
-	printf "Usage: ${SCRIPT_NAME} [-V] [-h] METRICS_CSV_FILE ...\n"
-	printf "Segregate the distortions in the METRICS_CSV_FILE(s) to their own files.\n"
-	printf "  -V : Print the version information and exit.\n"
-	printf "  -h : Print this message and exit.\n"
-	printf "  -v : Print extra output. (default OFF)\n"
-	printf "  METRICS_CSV_FILE : A CSV file with the metrics of distorted images.\n"
+	cat <<EOT
+${SCRIPT_NAME} 2010-04-24
+Copyright (C) 2011 Steve Ward
+EOT
+}
+
+
+function print_usage
+{
+	cat <<EOT
+Usage: ${SCRIPT_NAME} [-V] [-h] METRICS_CSV_FILE ...
+Segregate the distortions in the METRICS_CSV_FILE(s) to their own files.
+  -V : Print the version information and exit.
+  -h : Print this message and exit.
+  -v : Print extra output. (default OFF)
+  METRICS_CSV_FILE : A CSV file with the metrics of distorted images.
+EOT
+}
+
+
+function print_error
+{
+	printf "Error: ${1}\n" > /dev/stderr
+	print_usage
+	exit 1
+}
+
+
+function print_verbose
+{
+	${VERBOSE} && printf "${1}\n"
 }
 
 
 #-------------------------------------------------------------------------------
-
-
-declare -i VERBOSE=0
 
 
 while getopts "Vhv" option
@@ -54,23 +78,22 @@ do
 	case "${option}" in
 
 		V) # version
-			printf "${SCRIPT_NAME} 2010-08-17\n"
-			printf "Copyright (C) 2010 Steve Ward\n"
+			print_version
 			exit
 		;;
 
 		h) # help
-			usage
+			print_usage
 			exit
 		;;
 
 		v) # verbose
-			VERBOSE=1
+			VERBOSE=true
 		;;
 
 		*)
-			usage
-			exit 1
+			# Note: ${option} is '?'
+			print_error "Option is unknown."
 		;;
 
 	esac
@@ -85,9 +108,7 @@ shift $((OPTIND - 1)) || exit 1
 
 if (($# < 1))
 then
-	printf 'Error: Must give at least 1 file.\n'
-	usage
-	exit 1
+	print_error "Must give at least 1 file."
 fi
 
 
@@ -95,17 +116,18 @@ fi
 
 
 declare -r -a DISTORTIONS=(
-	'jpeg'
+	'quality'
 	'scale'
 	'blur'
 	'gaussian-blur'
 	'sharpen'
 	'unsharp'
 	'median'
-	'noise'
+	'salt-pepper-noise'
+	'gaussian-noise'
+	'speckle-noise'
 )
-
-((VERBOSE)) && printf "DISTORTIONS: ${DISTORTIONS[*]}\n"
+print_verbose "DISTORTIONS=(${DISTORTIONS[*]})"
 
 
 #-------------------------------------------------------------------------------
@@ -113,35 +135,38 @@ declare -r -a DISTORTIONS=(
 
 for METRICS_CSV_FILE in "$@"
 do
-	((VERBOSE)) && printf '\n'
+	print_verbose ""
+
+	print_verbose "METRICS_CSV_FILE=${METRICS_CSV_FILE}"
 
 	#---------------------------------------------------------------------------
 
 	if [[ ! -f "${METRICS_CSV_FILE}" ]]
 	then
-		printf "Error: File '${METRICS_CSV_FILE}' does not exist.\n"
-		exit 1
+		print_error "Metrics CSV file '${METRICS_CSV_FILE}' does not exist."
 	fi
-
-	((VERBOSE)) && printf "METRICS_CSV_FILE: ${METRICS_CSV_FILE}\n"
 
 	#---------------------------------------------------------------------------
 
 	IMAGE_SET="$(dirname -- "${METRICS_CSV_FILE}")" || exit 1
-	((VERBOSE)) && printf "IMAGE_SET: ${IMAGE_SET}\n"
+	print_verbose "IMAGE_SET=${IMAGE_SET}"
 
 	#---------------------------------------------------------------------------
 
 	for DISTORTION in "${DISTORTIONS[@]}"
 	do
-		# do not print DISTORTION (it is already in the SEGREGATED_METRICS_CSV_FILE)
+		print_verbose "DISTORTION=${DISTORTION}"
 
 		SEGREGATED_METRICS_CSV_FILE="${IMAGE_SET}/metrics_${DISTORTION}.csv"
-		((VERBOSE)) && printf "SEGREGATED_METRICS_CSV_FILE: ${SEGREGATED_METRICS_CSV_FILE}\n"
+		print_verbose "SEGREGATED_METRICS_CSV_FILE=${SEGREGATED_METRICS_CSV_FILE}"
 
 		head --lines=1 -- "${METRICS_CSV_FILE}" > "${SEGREGATED_METRICS_CSV_FILE}" || exit 1
 
-		grep -- "^distorted_${DISTORTION}" "${METRICS_CSV_FILE}" >> "${SEGREGATED_METRICS_CSV_FILE}" || exit 1
+		grep -- "^distorted_${DISTORTION}" "${METRICS_CSV_FILE}" >> "${SEGREGATED_METRICS_CSV_FILE}"
+		if (($? > 1))
+		then
+			print_error "An error occurred with grep."
+		fi
 
 	done
 
