@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# example:
+# Usage:
 #
 # time ./convert_colorspace_resize.sh -v *.jpg
 # time ./convert_colorspace_resize.sh -v $(find -type f -name '*.jpg' | sort)
@@ -27,33 +27,57 @@
 renice 19 --pid $$ > /dev/null
 
 
-declare -r SCRIPT_NAME="$(basename -- "${0}")"
+SCRIPT_NAME="$(basename -- "${0}")" || exit 1
+
+VERBOSE=false
+
+declare -i SIZE_X=384
+declare -i SIZE_Y=384
+
 
 
 #-------------------------------------------------------------------------------
 
 
-function usage
+function print_version
 {
-	printf "Usage: ${SCRIPT_NAME} [-V] [-h] [-v] [-x SIZE_X] [-y SIZE_Y] ORIGINAL_IMAGE ...\n"
-	printf "Convert the ORIGINAL_IMAGE(s) to gray-scale and resize.\n"
-	printf "  -V : Print the version information and exit.\n"
-	printf "  -h : Print this message and exit.\n"
-	printf "  -v : Print extra output. ; default OFF\n"
-	printf "  -x SIZE_X : The number of pixels on the X-axis. (default 384)\n"
-	printf "  -y SIZE_Y : The number of pixels on the Y-axis. (default 384)\n"
-	printf "  ORIGINAL_IMAGE : The original image to convert.\n"
+	cat <<EOT
+${SCRIPT_NAME} 2010-04-24
+Copyright (C) 2011 Steve Ward
+EOT
+}
+
+
+function print_usage
+{
+	cat <<EOT
+Usage: ${SCRIPT_NAME} [-V] [-h] [-v] [-x SIZE_X] [-y SIZE_Y] ORIGINAL_IMAGE ...
+Convert the ORIGINAL_IMAGE(s) to gray-scale and resize.
+  -V : Print the version information and exit.
+  -h : Print this message and exit.
+  -v : Print extra output. (default OFF)
+  -x SIZE_X : The number of pixels on the X-axis. (default 384)
+  -y SIZE_Y : The number of pixels on the Y-axis. (default 384)
+  ORIGINAL_IMAGE : The original image to convert.
+EOT
+}
+
+
+function print_error
+{
+	printf "Error: ${1}\n" > /dev/stderr
+	print_usage
+	exit 1
+}
+
+
+function print_verbose
+{
+	${VERBOSE} && printf "${1}\n"
 }
 
 
 #-------------------------------------------------------------------------------
-
-
-declare -i VERBOSE=0
-
-
-declare -i SIZE_X=384
-declare -i SIZE_Y=384
 
 
 while getopts "Vhvx:y:" option
@@ -61,18 +85,17 @@ do
 	case "${option}" in
 
 		V) # version
-			printf "${SCRIPT_NAME} 2010-08-13\n"
-			printf "Copyright (C) 2010 Steve Ward\n"
+			print_version
 			exit
 		;;
 
 		h) # help
-			usage
+			print_usage
 			exit
 		;;
 
 		v) # verbose
-			VERBOSE=1
+			VERBOSE=true
 		;;
 
 		x) # SIZE_X
@@ -80,9 +103,7 @@ do
 
 			if ((SIZE_X < 1))
 			then
-				printf "Error: SIZE_X (${SIZE_X}) is < 1.\n"
-				usage
-				exit 1
+				print_error "SIZE_X (${SIZE_X}) is < 1."
 			fi
 		;;
 
@@ -91,15 +112,13 @@ do
 
 			if ((SIZE_Y < 1))
 			then
-				printf "Error: SIZE_Y (${SIZE_Y}) is < 1.\n"
-				usage
-				exit 1
+				print_error "SIZE_Y (${SIZE_Y}) is < 1."
 			fi
 		;;
 
 		*)
-			usage
-			exit 1
+			# Note: ${option} is '?'
+			print_error "Option is unknown."
 		;;
 
 	esac
@@ -109,8 +128,8 @@ done
 shift $((OPTIND - 1)) || exit 1
 
 
-((VERBOSE)) && printf "SIZE_X: ${SIZE_X}\n"
-((VERBOSE)) && printf "SIZE_Y: ${SIZE_Y}\n"
+print_verbose "SIZE_X=${SIZE_X}"
+print_verbose "SIZE_Y=${SIZE_Y}"
 
 
 #-------------------------------------------------------------------------------
@@ -118,9 +137,7 @@ shift $((OPTIND - 1)) || exit 1
 
 if (($# < 1))
 then
-	printf "Error: Must give at least 1 file.\n"
-	usage
-	exit 1
+	print_error "Must give at least 1 file."
 fi
 
 
@@ -130,8 +147,8 @@ fi
 declare -r REFERENCE_IMAGE_PREFIX='reference'
 declare -r REFERENCE_IMAGE_SUFFIX='png'
 
-((VERBOSE)) && printf "REFERENCE_IMAGE_PREFIX: ${REFERENCE_IMAGE_PREFIX}\n"
-((VERBOSE)) && printf "REFERENCE_IMAGE_SUFFIX: ${REFERENCE_IMAGE_SUFFIX}\n"
+print_verbose "REFERENCE_IMAGE_PREFIX=${REFERENCE_IMAGE_PREFIX}"
+print_verbose "REFERENCE_IMAGE_SUFFIX=${REFERENCE_IMAGE_SUFFIX}"
 
 
 #-------------------------------------------------------------------------------
@@ -139,39 +156,35 @@ declare -r REFERENCE_IMAGE_SUFFIX='png'
 
 for ORIGINAL_IMAGE in "$@"
 do
-	((VERBOSE)) && printf '\n'
+	print_verbose ""
+
+	print_verbose "ORIGINAL_IMAGE=${ORIGINAL_IMAGE}"
 
 	#---------------------------------------------------------------------------
 
 	if [[ ! -f "${ORIGINAL_IMAGE}" ]]
 	then
-		printf "Error: File '${ORIGINAL_IMAGE}' does not exist.\n"
-		exit 1
+		print_error "File '${ORIGINAL_IMAGE}' does not exist."
 	fi
-
-	((VERBOSE)) && printf "ORIGINAL_IMAGE: ${ORIGINAL_IMAGE}\n"
 
 	#---------------------------------------------------------------------------
 
 	IMAGE_SET="${ORIGINAL_IMAGE%.*}"
-	((VERBOSE)) && printf "IMAGE_SET: ${IMAGE_SET}\n"
+	print_verbose "IMAGE_SET=${IMAGE_SET}"
 
 	if [[ -f "${IMAGE_SET}" ]]
 	then
-		printf "Error: File ${IMAGE_SET} already exists.\n"
-		exit 1
+		print_error "File ${IMAGE_SET} already exists."
 	fi
 
 	if [[ -d "${IMAGE_SET}" ]]
 	then
-		printf "Error: Directory ${IMAGE_SET} already exists.\n"
-		exit 1
+		print_error "Directory ${IMAGE_SET} already exists."
 	fi
 
 	if [[ -e "${IMAGE_SET}" ]]
 	then
-		printf "Error: ${IMAGE_SET} already exists.\n"
-		exit 1
+		print_error "Image set ${IMAGE_SET} already exists."
 	fi
 
 	#---------------------------------------------------------------------------
@@ -186,10 +199,10 @@ do
 	#---------------------------------------------------------------------------
 
 	REFERENCE_IMAGE="${IMAGE_SET}/${REFERENCE_IMAGE_PREFIX}.${REFERENCE_IMAGE_SUFFIX}"
-	((VERBOSE)) && printf "REFERENCE_IMAGE: ${REFERENCE_IMAGE}\n"
+	print_verbose "REFERENCE_IMAGE=${REFERENCE_IMAGE}"
 
 	# do not use '-verbose' option for 'convert', too much is printed
-	convert "${ORIGINAL_IMAGE}" -colorspace Gray -resize "${SIZE_X}x${SIZE_Y}" "${REFERENCE_IMAGE}" || exit
+	convert "${ORIGINAL_IMAGE}" -colorspace Gray -resize "${SIZE_X}x${SIZE_Y}" "${REFERENCE_IMAGE}" || exit 1
 
 	#---------------------------------------------------------------------------
 
