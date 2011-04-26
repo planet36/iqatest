@@ -16,38 +16,62 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# example:
+# Usage:
 #
 # time ./create_image_distortions.sh -v ./red_apple/reference.png
 # time ./create_image_distortions.sh -v $(find -type f -name 'reference.png' | sort)
 #
-# (takes about 11 min. for all image sets)
+# (takes about 5.8 min. per image set)
 
 
 renice 19 --pid $$ > /dev/null
 
 
-declare -r SCRIPT_NAME="$(basename -- "${0}")"
+SCRIPT_NAME="$(basename -- "${0}")" || exit 1
+
+VERBOSE=false
 
 
 #-------------------------------------------------------------------------------
 
 
-function usage
+function print_version
 {
-	printf "Usage: ${SCRIPT_NAME} [-V] [-h] [-v] REFERENCE_IMAGE ...\n"
-	printf "Create image distortions of the REFERENCE_IMAGE(s).\n"
-	printf "  -V : Print the version information and exit.\n"
-	printf "  -h : Print this message and exit.\n"
-	printf "  -v : Print extra output. (default OFF)\n"
-	printf "  REFERENCE_IMAGE : The reference image to create distortions of.\n"
+	cat <<EOT
+${SCRIPT_NAME} 2010-04-24
+Copyright (C) 2011 Steve Ward
+EOT
+}
+
+
+function print_usage
+{
+	cat <<EOT
+Usage: ${SCRIPT_NAME} [-V] [-h] [-v] REFERENCE_IMAGE ...
+Create image distortions of the REFERENCE_IMAGE(s).
+  -V : Print the version information and exit.
+  -h : Print this message and exit.
+  -v : Print extra output. (default OFF)
+  REFERENCE_IMAGE : The reference image to create distortions of.
+EOT
+}
+
+
+function print_error
+{
+	printf "Error: ${1}\n" > /dev/stderr
+	print_usage
+	exit 1
+}
+
+
+function print_verbose
+{
+	${VERBOSE} && printf "${1}\n"
 }
 
 
 #-------------------------------------------------------------------------------
-
-
-declare -i VERBOSE=0
 
 
 while getopts "Vhv" option
@@ -55,23 +79,22 @@ do
 	case "${option}" in
 
 		V) # version
-			printf "${SCRIPT_NAME} 2010-08-17\n"
-			printf "Copyright (C) 2010 Steve Ward\n"
+			print_version
 			exit
 		;;
 
 		h) # help
-			usage
+			print_usage
 			exit
 		;;
 
 		v) # verbose
-			VERBOSE=1
+			VERBOSE=true
 		;;
 
 		*)
-			usage
-			exit 1
+			# Note: ${option} is '?'
+			print_error "Option is unknown."
 		;;
 
 	esac
@@ -86,9 +109,7 @@ shift $((OPTIND - 1)) || exit 1
 
 if (($# < 1))
 then
-	printf 'Error: Must give at least 1 file.\n'
-	usage
-	exit 1
+	print_error "Must give at least 1 file."
 fi
 
 
@@ -97,17 +118,54 @@ fi
 
 function add_salt_pepper_noise
 {
+	local local_INFILE="${1}"
+	local local_OUTFILE="${2}"
+	local local_DENSITY="${3}"
+
 	# '--no-site-file' causes error: 'isgray' undefined
 	# '--no-init-path' causes error: 'pkg' undefined
 
 	cat <<EOT | octave --quiet --no-init-file --no-history --no-line-editing || exit 1
-density = ${3} / 100;
-img = imread('${1}');
-assert(isgray(img));
+img = imread('${local_INFILE}');
 img = im2double(img);
-img = imnoise(img, 'salt & pepper', density);
-img = im2uint8(img);
-imwrite(img, '${2}');
+img = imnoise(img, 'salt & pepper', ${local_DENSITY} / 100);
+imwrite(img, '${local_OUTFILE}');
+EOT
+}
+
+
+function add_gaussian_noise
+{
+	local local_INFILE="${1}"
+	local local_OUTFILE="${2}"
+	local local_VARIANCE="${3}"
+
+	# '--no-site-file' causes error: 'isgray' undefined
+	# '--no-init-path' causes error: 'pkg' undefined
+
+	cat <<EOT | octave --quiet --no-init-file --no-history --no-line-editing || exit 1
+img = imread('${local_INFILE}');
+img = im2double(img);
+img = imnoise(img, 'gaussian', 0, ${local_VARIANCE});
+imwrite(img, '${local_OUTFILE}');
+EOT
+}
+
+
+function add_speckle_noise
+{
+	local local_INFILE="${1}"
+	local local_OUTFILE="${2}"
+	local local_VARIANCE="${3}"
+
+	# '--no-site-file' causes error: 'isgray' undefined
+	# '--no-init-path' causes error: 'pkg' undefined
+
+	cat <<EOT | octave --quiet --no-init-file --no-history --no-line-editing || exit 1
+img = imread('${local_INFILE}');
+img = im2double(img);
+img = imnoise(img, 'speckle', ${local_VARIANCE});
+imwrite(img, '${local_OUTFILE}');
 EOT
 }
 
@@ -116,24 +174,35 @@ EOT
 
 
 # standard deviation values
-declare -r SIGMA_MIN=0.25
-declare -r SIGMA_MAX=6.375
+declare -r SIGMA_MIN=0.375
+declare -r SIGMA_MAX=6.500
 declare -r SIGMA_INC=0.125
-declare -r SIGMA_RANGE=($(seq "${SIGMA_MIN}" "${SIGMA_INC}" "${SIGMA_MAX}"))
+declare -r -a SIGMA_RANGE=($(seq "${SIGMA_MIN}" "${SIGMA_INC}" "${SIGMA_MAX}"))
 
 
-((VERBOSE)) && printf "SIGMA_MIN: ${SIGMA_MIN}\n"
-((VERBOSE)) && printf "SIGMA_MAX: ${SIGMA_MAX}\n"
-((VERBOSE)) && printf "SIGMA_INC: ${SIGMA_INC}\n"
-((VERBOSE)) && printf "SIGMA_RANGE: ${SIGMA_RANGE[*]}\n"
+print_verbose "SIGMA_MIN=${SIGMA_MIN}"
+print_verbose "SIGMA_MAX=${SIGMA_MAX}"
+print_verbose "SIGMA_INC=${SIGMA_INC}"
+print_verbose "SIGMA_RANGE=(${SIGMA_RANGE[*]})"
 
 
 declare -r DISTORTED_IMAGE_PREFIX='distorted'
-declare -r DISTORTED_IMAGE_SUFFIX='pgm'
-#declare -r DISTORTED_IMAGE_SUFFIX='png'
+print_verbose "DISTORTED_IMAGE_PREFIX=${DISTORTED_IMAGE_PREFIX}"
 
-((VERBOSE)) && printf "DISTORTED_IMAGE_PREFIX: ${DISTORTED_IMAGE_PREFIX}\n"
-((VERBOSE)) && printf "DISTORTED_IMAGE_SUFFIX: ${DISTORTED_IMAGE_SUFFIX}\n"
+
+declare -r -a DISTORTIONS=(
+	'quality'
+	'scale'
+	'blur'
+	'gaussian-blur'
+	'sharpen'
+	'unsharp'
+	'median'
+	'salt-pepper-noise'
+	'gaussian-noise'
+	'speckle-noise'
+)
+print_verbose "DISTORTIONS=(${DISTORTIONS[*]})"
 
 
 #-------------------------------------------------------------------------------
@@ -141,227 +210,279 @@ declare -r DISTORTED_IMAGE_SUFFIX='pgm'
 
 for REFERENCE_IMAGE in "$@"
 do
-	((VERBOSE)) && printf '\n'
+	print_verbose ""
+
+	print_verbose "REFERENCE_IMAGE=${REFERENCE_IMAGE}"
 
 	#---------------------------------------------------------------------------
 
 	if [[ ! -f "${REFERENCE_IMAGE}" ]]
 	then
-		printf "Error: File '${REFERENCE_IMAGE}' does not exist.\n"
-		exit 1
+		print_error "File '${REFERENCE_IMAGE}' does not exist."
 	fi
-
-	((VERBOSE)) && printf "REFERENCE_IMAGE: ${REFERENCE_IMAGE}\n"
 
 	#---------------------------------------------------------------------------
 
 	IMAGE_SET="$(dirname -- "${REFERENCE_IMAGE}")" || exit 1
-	((VERBOSE)) && printf "IMAGE_SET: ${IMAGE_SET}\n"
+	print_verbose "IMAGE_SET=${IMAGE_SET}"
 
 	#---------------------------------------------------------------------------
 
 	# do not use '-verbose' option for 'convert', too much is printed
 	COMMAND="convert ${REFERENCE_IMAGE} -strip"
-	((VERBOSE)) && printf "COMMAND: ${COMMAND}\n"
+	print_verbose "COMMAND=${COMMAND}"
 
 	GEOMETRY="$(identify -format '%[width]x%[height]' "${REFERENCE_IMAGE}")" || exit 1
-	((VERBOSE)) && printf "GEOMETRY: ${GEOMETRY}\n"
+	print_verbose "GEOMETRY=${GEOMETRY}"
 
-	((VERBOSE)) && printf '\n'
+	COLORSPACE="$(identify -format '%[colorspace]' "${REFERENCE_IMAGE}")" || exit 1
+	print_verbose "COLORSPACE=${COLORSPACE}"
+
+	case "${COLORSPACE}" in
+
+	Gray)
+		DISTORTED_IMAGE_SUFFIX='pgm'
+		;;
+
+	RGB)
+		DISTORTED_IMAGE_SUFFIX='ppm'
+		;;
+
+	*)
+		print_error "Unknown colorspace (${COLORSPACE}) for reference image '${REFERENCE_IMAGE}'."
+		;;
+
+	esac
+
+	print_verbose "DISTORTED_IMAGE_SUFFIX=${DISTORTED_IMAGE_SUFFIX}"
+
+	print_verbose ""
 
 	#---------------------------------------------------------------------------
 
-	DISTORTION='quality'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# JPEG quality value
-	DISTORTION_RANGE=($(seq 1 100))
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
+	for DISTORTION in "${DISTORTIONS[@]}"
 	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+		print_verbose "DISTORTION=${DISTORTION}"
 
-		# must save as jpg
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_jpeg_${VARIABLE}.jpg"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
+		COUNT=0
 
-		${COMMAND} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
+		case "${DISTORTION}" in
+
+		#-----------------------------------------------------------------------
+
+		quality)
+			# JPEG quality value
+			DISTORTION_RANGE=($(seq 1 100))
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				# must save as jpg
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.jpg"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		scale)
+			# scale to % then back to original size
+			DISTORTION_RANGE=($(seq 1 1 30 ; seq 32 2 60 ; seq 65 5 85))
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} "${VARIABLE}%" -${DISTORTION} "${GEOMETRY}!" "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		blur)
+			# standard deviation
+			DISTORTION_RANGE=(${SIGMA_RANGE[@]})
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		gaussian-blur)
+			# standard deviation
+			DISTORTION_RANGE=(${SIGMA_RANGE[@]})
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		sharpen)
+			# standard deviation
+			DISTORTION_RANGE=(${SIGMA_RANGE[@]})
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		unsharp)
+			# standard deviation
+			DISTORTION_RANGE=(${SIGMA_RANGE[@]})
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		median)
+			# pixel radius
+			DISTORTION_RANGE=($(seq 1 10))
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				${COMMAND} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit 1
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		salt-pepper-noise)
+			# impulse noise pixel density (%)
+			DISTORTION_RANGE=($(seq 0.05 0.05 3.0))
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				add_salt_pepper_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}"
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		gaussian-noise)
+			# variance
+			DISTORTION_RANGE=($(seq 0.0001 0.0001 0.0050 ; seq 0.0052 0.0002 0.0100))
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				add_gaussian_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}"
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		speckle-noise)
+			# variance
+			DISTORTION_RANGE=($(seq 0.0001 0.0001 0.0050 ; seq 0.0052 0.0002 0.0100))
+			print_verbose "DISTORTION_RANGE=(${DISTORTION_RANGE[*]})"
+
+			for VARIABLE in "${DISTORTION_RANGE[@]}"
+			do
+				# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
+
+				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
+				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
+
+				add_gaussian_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}"
+				((COUNT++))
+
+			done
+		;;
+
+		#-----------------------------------------------------------------------
+
+		*)
+			print_error "Unknown distortion (${DISTORTION})."
+		;;
+
+		#-----------------------------------------------------------------------
+
+		esac
+
+		print_verbose "COUNT=${COUNT}"
+
+		print_verbose ""
 
 	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='scale'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# scale to % then back to original size
-	DISTORTION_RANGE=($(seq 2 2 20; seq 25 5 50; seq 60 10 90))
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		${COMMAND} -${DISTORTION} "${VARIABLE}%" -${DISTORTION} "${GEOMETRY}!" "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='blur'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# standard deviation
-	DISTORTION_RANGE=(${SIGMA_RANGE[@]})
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='gaussian-blur'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# standard deviation
-	DISTORTION_RANGE=(${SIGMA_RANGE[@]})
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='sharpen'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# standard deviation
-	DISTORTION_RANGE=(${SIGMA_RANGE[@]})
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='unsharp'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# standard deviation
-	DISTORTION_RANGE=(${SIGMA_RANGE[@]})
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='median'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# pixel radius
-	DISTORTION_RANGE=($(seq 1 10))
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		${COMMAND} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit 1
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
-
-	DISTORTION='noise'
-	((VERBOSE)) && printf "DISTORTION: ${DISTORTION}\n"
-
-	# impulse noise pixel density (%)
-	DISTORTION_RANGE=($(seq 1 25))
-	((VERBOSE)) && printf "DISTORTION_RANGE: ${DISTORTION_RANGE[*]}\n"
-
-	COUNT=0
-	for VARIABLE in "${DISTORTION_RANGE[@]}"
-	do
-		# do not print VARIABLE (it is already in the DISTORTED_IMAGE)
-
-		DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
-		((VERBOSE)) && printf "DISTORTED_IMAGE: ${DISTORTED_IMAGE}\n"
-
-		add_salt_pepper_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}"
-		((COUNT++))
-
-	done
-	((VERBOSE)) && printf "COUNT: ${COUNT}\n"
-	((VERBOSE)) && printf '\n'
-
-	#---------------------------------------------------------------------------
 
 done
