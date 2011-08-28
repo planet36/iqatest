@@ -35,7 +35,6 @@ declare -i SIZE_X=384
 declare -i SIZE_Y=384
 
 
-
 #-------------------------------------------------------------------------------
 
 
@@ -144,16 +143,6 @@ fi
 #-------------------------------------------------------------------------------
 
 
-declare -r REFERENCE_IMAGE_PREFIX='reference'
-declare -r REFERENCE_IMAGE_SUFFIX='png'
-
-print_verbose "REFERENCE_IMAGE_PREFIX=${REFERENCE_IMAGE_PREFIX}"
-print_verbose "REFERENCE_IMAGE_SUFFIX=${REFERENCE_IMAGE_SUFFIX}"
-
-
-#-------------------------------------------------------------------------------
-
-
 for ORIGINAL_IMAGE in "$@"
 do
 	print_verbose ""
@@ -198,11 +187,15 @@ do
 
 	#---------------------------------------------------------------------------
 
-	REFERENCE_IMAGE="${IMAGE_SET}/${REFERENCE_IMAGE_PREFIX}.${REFERENCE_IMAGE_SUFFIX}"
-	print_verbose "REFERENCE_IMAGE=${REFERENCE_IMAGE}"
+	# Note: Do not use the '-verbose' option for 'convert' because too much is printed.
 
-	# do not use '-verbose' option for 'convert', too much is printed
-	convert "${ORIGINAL_IMAGE}" -colorspace Gray -resize "${SIZE_X}x${SIZE_Y}" "${REFERENCE_IMAGE}" || exit 1
+	# Create a reference image from the original image by converting it to grayscale and resizing it.
+	# http://www.imagemagick.org/script/command-line-options.php#colorspace
+	convert "${ORIGINAL_IMAGE}" -colorspace Rec709Luma -resize "${SIZE_X}x${SIZE_Y}" "${IMAGE_SET}/reference.png" || exit 1
+
+	# Create an anti-reference image that's the same size as the reference image from the 50% gray pattern.
+	# http://www.imagemagick.org/script/formats.php#builtin-patterns
+	convert -size "${SIZE_X}x${SIZE_Y}" pattern:gray50 "${IMAGE_SET}/anti-reference.png" || exit 1
 
 	#---------------------------------------------------------------------------
 
