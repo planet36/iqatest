@@ -27,17 +27,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 example:
 
-php filter_ssim_values.php --verbose ./red_apple/metrics_jpeg.csv
-php filter_ssim_values.php           ./red_apple/metrics_jpeg.csv
+php filter-ssim-values.php --verbose ./red_apple/metrics_jpeg.csv
+php filter-ssim-values.php           ./red_apple/metrics_jpeg.csv
 
-php filter_ssim_values.php --verbose $(find -type f -name metrics_jpeg.csv)
-php filter_ssim_values.php           $(find -type f -name metrics_jpeg.csv)
+php filter-ssim-values.php --verbose $(find -type f -name metrics_jpeg.csv)
+php filter-ssim-values.php           $(find -type f -name metrics_jpeg.csv)
 
-php filter_ssim_values.php --verbose --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_jpeg.csv
-php filter_ssim_values.php           --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_jpeg.csv
+php filter-ssim-values.php --verbose --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_jpeg.csv
+php filter-ssim-values.php           --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_jpeg.csv
 
-php filter_ssim_values.php --verbose --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_jpeg.csv
-php filter_ssim_values.php           --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_jpeg.csv
+php filter-ssim-values.php --verbose --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_jpeg.csv
+php filter-ssim-values.php           --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_jpeg.csv
 
 */
 
