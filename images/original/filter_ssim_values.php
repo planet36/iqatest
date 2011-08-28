@@ -3,7 +3,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2010  Steve Ward
+Copyright (C) 2011  Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ $long_options = array('version', 'help', 'verbose', 'min:', 'max:', 'inc:',);
 
 $options = getopt(null, $long_options);
 
-if (isset($options['version'])) {print $script_name . " 2010-08-17\n"; print "Copyright (C) 2010 Steve Ward\n"; exit;}
+if (isset($options['version'])) {print $script_name . " 2010-08-17\n"; print "Copyright (C) 2011  Steve Ward\n"; exit;}
 
 if (isset($options['help'])) {print_usage_message(); exit;}
 
