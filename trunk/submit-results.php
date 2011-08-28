@@ -3,7 +3,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2010  Steve Ward
+Copyright (C) 2011  Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ if (!array_key_exists('results', $_POST))
 <!--
 
 Image Quality Assessment Test
-Copyright (C) 2010  Steve Ward
+Copyright (C) 2011  Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,4 +1,4 @@
-## Copyright (C) 2010 Steve Ward
+## Copyright (C) 2011  Steve Ward
 
 # This is an implementation of the algorithm for calculating the
 # Structural SIMilarity (SSIM) index between two images. Please refer
