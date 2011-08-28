@@ -29,3 +29,4 @@ find ./results         | xargs chmod go-rwx || exit 1
 find ./images/original | xargs chmod go-rwx || exit 1
 
 find -type f -name '*.sh' | xargs chmod 700 || exit 1
+find -type f -name 'index.html' | xargs chmod 444 || exit 1
