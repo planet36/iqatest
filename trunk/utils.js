@@ -21,267 +21,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
 
-// utility for getElementById
+// Get the datum by its id.  This is a utility for "getElementById".
 function id(x)
 {
 	if (typeof x == "string")
 	{
 		try
 		{
-			return document.getElementById(x);
+			return document.getElementById(x)
 		}
 		catch (e)
 		{
-			alert(e.name + ": " + e.message);
+			alert(e.name + ": " + e.message)
 
-			return x;
+			return x
 		}
 	}
 	else
 	{
-		return x;
+		return x
 	}
 }
 
 
-//------------------------------------------------------------------------------
-
-
-// utility for getElementsByName
+// Get the daturm by its name.  This is a utility for "getElementsByName".
 function name(x)
 {
 	if (typeof x == "string")
 	{
 		try
 		{
-			return document.getElementsByName(x);
+			return document.getElementsByName(x)
 		}
 		catch (e)
 		{
-			alert(e.name + ": " + e.message);
+			alert(e.name + ": " + e.message)
 
-			return x;
+			return x
 		}
 	}
 	else
 	{
-		return x;
+		return x
 	}
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get the current time
-/*
-The current time is represented as the number of milliseconds since
-1970-01-01 00:00:00.000 (GMT)
-*/
-function get_current_time()
-{
-	return new Date().getTime();
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// repeat a string a number of times
-function string_repeat(str, int_n)
-{
-	var result = "";
-
-	for (var i = 0; i < int_n; ++i)
-	{
-		result += str;
-	}
-
-	return result;
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get the sum of all the elements in an array
-function array_sum(arr)
-{
-	// the Array.reduce method is only available in Firefox 3+
-
-	var sum = 0;
-
-	for (var i = 0; i < arr.length; ++i)
-	{
-		sum += arr[i];
-	}
-
-	return sum;
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get the average of all the elements in an array
-function array_average(arr)
-{
-	if (arr.length === 0)
-	{
-		return 0.0;
-	}
-
-	return array_sum(arr) / arr.length;
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get the minimum element in an array
-function array_min(arr)
-{
-	return Math.min.apply(null, arr);
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get the minimum element in an array
-function array_max(arr)
-{
-	return Math.max.apply(null, arr);
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get a random boolean
-function get_random_boolean()
-{
-	return !Math.round(Math.random());
-}
-
-
-//------------------------------------------------------------------------------
-
-
-/// get a random float in the interval [0, b)
-function get_random_float_1(b)
-{
-	// [0, 1) * b => [0, b)
-	return Math.random() * b;
-}
-
-
-//------------------------------------------------------------------------------
-
-
-/// get a random int in the interval [0, b)
-function get_random_int_1(b)
-{
-	return Math.floor(get_random_float_1(b));
-}
-
-
-//------------------------------------------------------------------------------
-
-
-/// get a random float in the interval [a, b)
-function get_random_float_2(a, b)
-{
-	// [0, 1) * (b - a) => [0, b - a)
-	// [0, b - a) + a => [a, b)
-	return Math.random() * (b - a) + a;
-}
-
-
-//------------------------------------------------------------------------------
-
-
-/// get a random int in the interval [a, b)
-function get_random_int_2(a, b)
-{
-	return Math.floor(get_random_float_2(a, b));
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// shuffle the elements in the array
-/**
-\sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-*/
-function array_shuffle(arr)
-{
-	var n = arr.length;
-
-	if ((n === 0) || (n === 1))
-	{
-		return;
-	}
-
-	// for every element
-	for (var i = 0; i < n - 1; ++i)
-	{
-		// the element to swap
-		var j = get_random_int_2(i, n);
-
-		if (i == j)
-		{
-			// no need to swap
-			continue;
-		}
-
-		// parallel assignment is only available in Firefox 2+
-		// [arr[i], arr[j]] = [arr[j], arr[i]];
-
-		// swap
-		var tmp = arr[i];
-		arr[i] = arr[j];
-		arr[j] = tmp;
-	}
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// set all the radio button checked properties to false
-function reset_radio_button_checked_properties(radio_button_group_name)
-{
-	var elements = name(radio_button_group_name);
-
-	for (var i = 0; i < elements.length; ++i)
-	{
-		elements[i].checked = false;
-	}
-}
-
-
-//------------------------------------------------------------------------------
-
-
-// get the value of the first checked radio button
-function get_radio_button_value(radio_button_group_name)
-{
-	var result = "";
-
-	var elements = name(radio_button_group_name);
-
-	for (var i = 0; i < elements.length; ++i)
-	{
-		if (elements[i].checked)
-		{
-			result = elements[i].value;
-			break;
-		}
-	}
-
-	return result;
 }
 
 
@@ -292,18 +74,18 @@ function set_element_property(element, property, value)
 {
 	try
 	{
-		id(element)[property] = value;
+		id(element)[property] = value
 	}
 	catch (e)
 	{
-		alert(e.name + ": " + e.message);
+		alert(e.name + ": " + e.message)
 	}
 }
 
 
 function reset_element_property(element, property)
 {
-	set_element_property(element, property, null);
+	set_element_property(element, property, null)
 }
 
 
@@ -312,13 +94,13 @@ function reset_element_property(element, property)
 
 function set_element_disabled(element, value)
 {
-	set_element_property(element, "disabled", value);
+	set_element_property(element, "disabled", value)
 }
 
 
 function reset_element_disabled(element)
 {
-	reset_element_property(element, "disabled");
+	reset_element_property(element, "disabled")
 }
 
 
@@ -327,13 +109,13 @@ function reset_element_disabled(element)
 
 function set_element_disabled_false(element)
 {
-	set_element_disabled(element, false);
+	set_element_disabled(element, false)
 }
 
 
 function set_element_disabled_true(element)
 {
-	set_element_disabled(element, true);
+	set_element_disabled(element, true)
 }
 
 
@@ -344,18 +126,18 @@ function set_element_style_property(element, property, value)
 {
 	try
 	{
-		id(element).style[property] = value;
+		id(element).style[property] = value
 	}
 	catch (e)
 	{
-		alert(e.name + ": " + e.message);
+		alert(e.name + ": " + e.message)
 	}
 }
 
 
 function reset_element_style_property(element, property)
 {
-	set_element_style_property(element, property, "");
+	set_element_style_property(element, property, "")
 }
 
 
@@ -375,13 +157,13 @@ http://www.w3.org/TR/CSS21/visuren.html#propdef-display
 Value: inline | block | list-item | run-in | inline-block | table | inline-table | table-row-group | table-header-group | table-footer-group | table-row | table-column-group | table-column | table-cell | table-caption | none | inherit
 Initial: inline
 */
-	set_element_style_property(element, "display", value);
+	set_element_style_property(element, "display", value)
 }
 
 
 function reset_element_style_display(element)
 {
-	reset_element_style_property(element, "display");
+	reset_element_style_property(element, "display")
 }
 
 
@@ -390,22 +172,22 @@ function reset_element_style_display(element)
 
 function set_element_style_display_block(element)
 {
-	set_element_style_display(element, "block");
+	set_element_style_display(element, "block")
 }
 
 function set_element_style_display_inline(element)
 {
-	set_element_style_display(element, "inline");
+	set_element_style_display(element, "inline")
 }
 
 function set_element_style_display_list_item(element)
 {
-	set_element_style_display(element, "list-item");
+	set_element_style_display(element, "list-item")
 }
 
 function set_element_style_display_none(element)
 {
-	set_element_style_display(element, "none");
+	set_element_style_display(element, "none")
 }
 
 
@@ -420,13 +202,13 @@ http://www.w3.org/TR/CSS21/visufx.html#visibility
 Value: visible | hidden | collapse | inherit
 Initial: visible
 */
-	set_element_style_property(element, "visibility", value);
+	set_element_style_property(element, "visibility", value)
 }
 
 
 function reset_element_style_visibility(element)
 {
-	reset_element_style_property(element, "visibility");
+	reset_element_style_property(element, "visibility")
 }
 
 
@@ -435,53 +217,271 @@ function reset_element_style_visibility(element)
 
 function set_element_style_visibility_visible(element)
 {
-	set_element_style_visibility(element, "visible");
+	set_element_style_visibility(element, "visible")
 }
 
 function set_element_style_visibility_hidden(element)
 {
-	set_element_style_visibility(element, "hidden");
+	set_element_style_visibility(element, "hidden")
 }
 
 function set_element_style_visibility_collapse(element)
 {
-	set_element_style_visibility(element, "collapse");
+	set_element_style_visibility(element, "collapse")
 }
 
 function set_element_style_visibility_inherit(element)
 {
-	set_element_style_visibility(element, "inherit");
+	set_element_style_visibility(element, "inherit")
 }
 
 
 //------------------------------------------------------------------------------
 
 
-// transition display from one element to another element
+// Transition display from one element to another element.
 function transition_from_to(from_element, to_element)
 {
-	// make the first element not displayed
-	set_element_style_display_none(from_element);
+	// Make the first element not displayed.
+	set_element_style_display_none(from_element)
 
-	// scroll to the top of the page
-	scrollTo(0, 0);
+	// Scroll to the top of the page.
+	scrollTo(0, 0)
 
-	// make the second element displayed
-	reset_element_style_display(to_element);
+	// Make the second element displayed.
+	reset_element_style_display(to_element)
 }
 
 
-// transition display from one element to another element
+// Transition display from one element to another element.
 function transition_from_to_timeout(from_element, to_element, delay)
 {
-	// make the first element not displayed
-	set_element_style_display_none(from_element);
+	// Make the first element not displayed.
+	set_element_style_display_none(from_element)
 
-	// scroll to the top of the page
-	scrollTo(0, 0);
+	// Scroll to the top of the page.
+	scrollTo(0, 0)
 
-	// make the second element displayed after the delay
-	setTimeout("reset_element_style_display('" + to_element + "');", delay);
+	// Make the second element displayed after the delay.
+	setTimeout("reset_element_style_display('" + to_element + "');", delay)
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get the current time.
+/*
+The current time is represented as the number of milliseconds since
+1970-01-01 00:00:00.000 (GMT)
+*/
+function get_current_time()
+{
+	return new Date().getTime()
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Repeat a string a number of times.
+function string_repeat(string, num)
+{
+	return Array(num + 1).join(string)
+	/*
+	var result = ""
+
+	for (var i = 0; i < num; ++i)
+	{
+		result += string
+	}
+
+	return result
+	*/
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get the sum of all the elements in an array.
+function array_sum(arr)
+{
+	// The Array.reduce method is only available in Firefox 3+.
+
+	var sum = 0
+
+	for (var i = 0; i < arr.length; ++i)
+	{
+		sum += arr[i]
+	}
+
+	return sum
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get the average of all the elements in an array.
+function array_average(arr)
+{
+	if (arr.length === 0)
+	{
+		return 0.0
+	}
+
+	return array_sum(arr) / arr.length
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get the minimum element in an array.
+function array_min(arr)
+{
+	return Math.min.apply(null, arr)
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get the minimum element in an array.
+function array_max(arr)
+{
+	return Math.max.apply(null, arr)
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get a random boolean.
+function get_random_boolean()
+{
+	return !Math.round(Math.random())
+}
+
+
+//------------------------------------------------------------------------------
+
+
+/// Get a random float in the interval [0, b).
+function get_random_float_1(b)
+{
+	// [0, 1) * b => [0, b)
+	return Math.random() * b
+}
+
+
+//------------------------------------------------------------------------------
+
+
+/// Get a random int in the interval [0, b).
+function get_random_int_1(b)
+{
+	return Math.floor(get_random_float_1(b))
+}
+
+
+//------------------------------------------------------------------------------
+
+
+/// Get a random float in the interval [a, b).
+function get_random_float_2(a, b)
+{
+	// [0, 1) * (b - a) => [0, b - a)
+	// [0, b - a) + a => [a, b)
+	return Math.random() * (b - a) + a
+}
+
+
+//------------------------------------------------------------------------------
+
+
+/// Get a random int in the interval [a, b).
+function get_random_int_2(a, b)
+{
+	return Math.floor(get_random_float_2(a, b))
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Shuffle the elements in the array.
+/**
+\sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+*/
+function array_shuffle(arr)
+{
+	var n = arr.length
+
+	if ((n === 0) || (n === 1))
+	{
+		return
+	}
+
+	// for every element
+	for (var i = 0; i < n - 1; ++i)
+	{
+		// the element to swap
+		var j = get_random_int_2(i, n)
+
+		if (i == j)
+		{
+			// no need to swap
+			continue
+		}
+
+		// parallel assignment is only available in Firefox 2+
+		// [arr[i], arr[j]] = [arr[j], arr[i]]
+
+		// swap
+		var tmp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = tmp
+	}
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Set all the radio button checked properties to false.
+function reset_radio_button_checked_properties(radio_button_group_name)
+{
+	var elements = name(radio_button_group_name)
+
+	for (var i = 0; i < elements.length; ++i)
+	{
+		elements[i].checked = false
+	}
+}
+
+
+//------------------------------------------------------------------------------
+
+
+// Get the value of the first checked radio button.
+function get_radio_button_value(radio_button_group_name)
+{
+	var result = ""
+
+	var elements = name(radio_button_group_name)
+
+	for (var i = 0; i < elements.length; ++i)
+	{
+		if (elements[i].checked)
+		{
+			result = elements[i].value
+			break
+		}
+	}
+
+	return result
 }
 
 
