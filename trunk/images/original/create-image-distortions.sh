@@ -18,8 +18,8 @@
 
 # Usage:
 #
-# time ./create_image_distortions.sh -v ./red_apple/reference.png
-# time ./create_image_distortions.sh -v $(find -type f -name 'reference.png' | sort)
+# time ./create-image-distortions.sh -v ./red_apple/reference.png
+# time ./create-image-distortions.sh -v $(find -type f -name 'reference.png' | sort)
 #
 # (takes about 5.8 min. per image set)
 
