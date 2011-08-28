@@ -45,9 +45,6 @@ php filter_ssim_values.php           --min=0.82 --max=0.90 --inc=0.08 ./gizah_py
 //------------------------------------------------------------------------------
 
 
-require 'closest_value.php';
-
-
 if (assert_options(ASSERT_BAIL, 1) === false)
 {
 	exit('"assert_options" function failed.');
@@ -55,6 +52,12 @@ if (assert_options(ASSERT_BAIL, 1) === false)
 
 
 $script_name = basename(__FILE__);
+
+
+
+
+//##### add print_verbose and print_error functions
+
 
 
 //------------------------------------------------------------------------------
@@ -119,6 +122,7 @@ if (isset($options['inc'])) {$ssim_inc = floatval($options['inc']); assert(array
 //------------------------------------------------------------------------------
 
 
+//##### use print_error when it's available
 if ($ssim_min > $ssim_max)
 {
 	print "Error: MIN ($ssim_min) must be <= MAX ($ssim_max).\n";
@@ -129,6 +133,7 @@ if ($ssim_min > $ssim_max)
 assert($ssim_min <= $ssim_max);
 
 
+//##### use print_error when it's available
 if ($ssim_inc <= 0)
 {
 	print "Error: INC ($ssim_inc) must be > 0.\n";
@@ -139,11 +144,48 @@ if ($ssim_inc <= 0)
 assert($ssim_inc > 0);
 
 
+//##### use print_error when it's available
 if ($argc < 1)
 {
 	print "Error: Must give at least 1 file.\n";
 	print_usage_message();
 	exit(1);
+}
+
+
+//------------------------------------------------------------------------------
+
+
+/// find the key of the array value closest to \a x
+function closest_value(array $arr, $x)
+{
+	$min_key = null;
+
+	if (!is_numeric($x))
+	{
+		return $min_key;
+	}
+
+	/// \sa http://php.net/manual/en/math.constants.php
+	$min_val = INF;
+
+	foreach ($arr as $key => $val)
+	{
+		if (!is_numeric($val))
+		{
+			continue;
+		}
+
+		$diff = abs($x - $val);
+
+		if ($diff < $min_val)
+		{
+			$min_val = $diff;
+			$min_key = $key;
+		}
+	}
+
+	return $min_key;
 }
 
 
@@ -156,6 +198,7 @@ foreach ($argv as $file_name)
 
 	//--------------------------------------------------------------------------
 
+	//##### use print_error when it's available
 	if (!file_exists($file_name))
 	{
 		print 'Error: File ' . escapeshellarg($file_name) . ' does not exist.' . "\n";
@@ -163,6 +206,7 @@ foreach ($argv as $file_name)
 		exit(1);
 	}
 
+	//##### use print_verbose when it's available
 	if ($verbose)
 	{
 		print 'file_name: ' . escapeshellarg($file_name) . "\n";
@@ -197,6 +241,7 @@ foreach ($argv as $file_name)
 
 	assert(!empty($distorted_image_ssim_array));
 
+	//##### use print_verbose when it's available
 	if ($verbose)
 	{
 		print 'distorted_image_ssim_array: ';
@@ -217,6 +262,7 @@ foreach ($argv as $file_name)
 
 	assert(!empty($distorted_images));
 
+	//##### use print_verbose when it's available
 	if ($verbose)
 	{
 		print 'distorted_images: ';
