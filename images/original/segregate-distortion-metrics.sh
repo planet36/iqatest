@@ -18,10 +18,9 @@
 
 # Usage:
 #
-# time ./convert_colorspace_resize.sh -v *.jpg
-# time ./convert_colorspace_resize.sh -v $(find -type f -name '*.jpg' | sort)
+# time ./segregate-distortion-metrics.sh -v $(find -type f -name metrics.csv)
 #
-# (takes about 7.5 sec for all images)
+# (takes less than 1 sec. per metrics file)
 
 
 renice 19 --pid $$ > /dev/null
@@ -30,9 +29,6 @@ renice 19 --pid $$ > /dev/null
 SCRIPT_NAME="$(basename -- "${0}")" || exit 1
 
 VERBOSE=false
-
-declare -i SIZE_X=384
-declare -i SIZE_Y=384
 
 
 #-------------------------------------------------------------------------------
@@ -50,14 +46,12 @@ EOT
 function print_usage
 {
 	cat <<EOT
-Usage: ${SCRIPT_NAME} [-V] [-h] [-v] [-x SIZE_X] [-y SIZE_Y] ORIGINAL_IMAGE ...
-Convert the ORIGINAL_IMAGE(s) to gray-scale and resize.
+Usage: ${SCRIPT_NAME} [-V] [-h] METRICS_CSV_FILE ...
+Segregate the distortions in the METRICS_CSV_FILE(s) to their own files.
   -V : Print the version information and exit.
   -h : Print this message and exit.
   -v : Print extra output. (default OFF)
-  -x SIZE_X : The number of pixels on the X-axis. (default 384)
-  -y SIZE_Y : The number of pixels on the Y-axis. (default 384)
-  ORIGINAL_IMAGE : The original image to convert.
+  METRICS_CSV_FILE : A CSV file with the metrics of distorted images.
 EOT
 }
 
@@ -79,7 +73,7 @@ function print_verbose
 #-------------------------------------------------------------------------------
 
 
-while getopts "Vhvx:y:" option
+while getopts "Vhv" option
 do
 	case "${option}" in
 
@@ -97,24 +91,6 @@ do
 			VERBOSE=true
 		;;
 
-		x) # SIZE_X
-			SIZE_X="${OPTARG}"
-
-			if ((SIZE_X < 1))
-			then
-				print_error "SIZE_X (${SIZE_X}) is < 1."
-			fi
-		;;
-
-		y) # SIZE_Y
-			SIZE_Y="${OPTARG}"
-
-			if ((SIZE_Y < 1))
-			then
-				print_error "SIZE_Y (${SIZE_Y}) is < 1."
-			fi
-		;;
-
 		*)
 			# Note: ${option} is '?'
 			print_error "Option is unknown."
@@ -125,10 +101,6 @@ done
 
 
 shift $((OPTIND - 1)) || exit 1
-
-
-print_verbose "SIZE_X=${SIZE_X}"
-print_verbose "SIZE_Y=${SIZE_Y}"
 
 
 #-------------------------------------------------------------------------------
@@ -143,59 +115,60 @@ fi
 #-------------------------------------------------------------------------------
 
 
-for ORIGINAL_IMAGE in "$@"
+declare -r -a DISTORTIONS=(
+	'quality'
+	'scale'
+	'blur'
+	'gaussian-blur'
+	'sharpen'
+	'unsharp'
+	'median'
+	'salt-pepper-noise'
+	'gaussian-noise'
+	'speckle-noise'
+)
+print_verbose "DISTORTIONS=(${DISTORTIONS[*]})"
+
+
+#-------------------------------------------------------------------------------
+
+
+for METRICS_CSV_FILE in "$@"
 do
 	print_verbose ""
 
-	print_verbose "ORIGINAL_IMAGE=${ORIGINAL_IMAGE}"
+	print_verbose "METRICS_CSV_FILE=${METRICS_CSV_FILE}"
 
 	#---------------------------------------------------------------------------
 
-	if [[ ! -f "${ORIGINAL_IMAGE}" ]]
+	if [[ ! -f "${METRICS_CSV_FILE}" ]]
 	then
-		print_error "File '${ORIGINAL_IMAGE}' does not exist."
+		print_error "Metrics CSV file '${METRICS_CSV_FILE}' does not exist."
 	fi
 
 	#---------------------------------------------------------------------------
 
-	IMAGE_SET="${ORIGINAL_IMAGE%.*}"
+	IMAGE_SET="$(dirname -- "${METRICS_CSV_FILE}")" || exit 1
 	print_verbose "IMAGE_SET=${IMAGE_SET}"
 
-	if [[ -f "${IMAGE_SET}" ]]
-	then
-		print_error "File ${IMAGE_SET} already exists."
-	fi
-
-	if [[ -d "${IMAGE_SET}" ]]
-	then
-		print_error "Directory ${IMAGE_SET} already exists."
-	fi
-
-	if [[ -e "${IMAGE_SET}" ]]
-	then
-		print_error "Image set ${IMAGE_SET} already exists."
-	fi
-
 	#---------------------------------------------------------------------------
 
-	if ((VERBOSE))
-	then
-		mkdir --verbose --parents "${IMAGE_SET}" || exit 1
-	else
-		mkdir           --parents "${IMAGE_SET}" || exit 1
-	fi
+	for DISTORTION in "${DISTORTIONS[@]}"
+	do
+		print_verbose "DISTORTION=${DISTORTION}"
 
-	#---------------------------------------------------------------------------
+		SEGREGATED_METRICS_CSV_FILE="${IMAGE_SET}/metrics_${DISTORTION}.csv"
+		print_verbose "SEGREGATED_METRICS_CSV_FILE=${SEGREGATED_METRICS_CSV_FILE}"
 
-	# Note: Do not use the '-verbose' option for 'convert' because too much is printed.
+		head --lines=1 -- "${METRICS_CSV_FILE}" > "${SEGREGATED_METRICS_CSV_FILE}" || exit 1
 
-	# Create a reference image from the original image by converting it to grayscale and resizing it.
-	# http://www.imagemagick.org/script/command-line-options.php#colorspace
-	convert "${ORIGINAL_IMAGE}" -colorspace Rec709Luma -resize "${SIZE_X}x${SIZE_Y}" "${IMAGE_SET}/reference.png" || exit 1
+		grep -- "^distorted_${DISTORTION}" "${METRICS_CSV_FILE}" >> "${SEGREGATED_METRICS_CSV_FILE}"
+		if (($? > 1))
+		then
+			print_error "An error occurred with grep."
+		fi
 
-	# Create an anti-reference image that's the same size as the reference image from the 50% gray pattern.
-	# http://www.imagemagick.org/script/formats.php#builtin-patterns
-	convert -size "${SIZE_X}x${SIZE_Y}" pattern:gray50 "${IMAGE_SET}/anti-reference.png" || exit 1
+	done
 
 	#---------------------------------------------------------------------------
 
