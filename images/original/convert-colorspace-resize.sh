@@ -21,7 +21,7 @@
 # time ./convert-colorspace-resize.sh -v *.jpg
 # time ./convert-colorspace-resize.sh -v $(find -type f -name '*.jpg' | sort)
 #
-# (takes about 7.5 sec for all images)
+# (takes about 10 sec for all images)
 
 
 renice 19 --pid $$ > /dev/null
@@ -30,6 +30,7 @@ renice 19 --pid $$ > /dev/null
 SCRIPT_NAME="$(basename -- "${0}")" || exit 1
 
 VERBOSE=false
+VERBOSE_STRING=''
 
 declare -i SIZE_X=384
 declare -i SIZE_Y=384
@@ -41,7 +42,7 @@ declare -i SIZE_Y=384
 function print_version
 {
 	cat <<EOT
-${SCRIPT_NAME} 2010-04-24
+${SCRIPT_NAME} 2011-08-23
 Copyright (C) 2011 Steve Ward
 EOT
 }
@@ -95,6 +96,7 @@ do
 
 		v) # verbose
 			VERBOSE=true
+			VERBOSE_STRING='--verbose'
 		;;
 
 		x) # SIZE_X
@@ -178,12 +180,7 @@ do
 
 	#---------------------------------------------------------------------------
 
-	if ((VERBOSE))
-	then
-		mkdir --verbose --parents "${IMAGE_SET}" || exit 1
-	else
-		mkdir           --parents "${IMAGE_SET}" || exit 1
-	fi
+	mkdir ${VERBOSE_STRING} --parents "${IMAGE_SET}" || exit 1
 
 	#---------------------------------------------------------------------------
 
@@ -193,9 +190,12 @@ do
 	# http://www.imagemagick.org/script/command-line-options.php#colorspace
 	convert "${ORIGINAL_IMAGE}" -colorspace Rec709Luma -resize "${SIZE_X}x${SIZE_Y}" "${IMAGE_SET}/reference.png" || exit 1
 
+	GEOMETRY="$(identify -format '%[width]x%[height]' "${IMAGE_SET}/reference.png")" || exit 1
+	print_verbose "GEOMETRY=${GEOMETRY}"
+
 	# Create an anti-reference image that's the same size as the reference image from the 50% gray pattern.
 	# http://www.imagemagick.org/script/formats.php#builtin-patterns
-	convert -size "${SIZE_X}x${SIZE_Y}" pattern:gray50 "${IMAGE_SET}/anti-reference.png" || exit 1
+	convert -size "${GEOMETRY}" pattern:gray50 "${IMAGE_SET}/anti-reference.png" || exit 1
 
 	#---------------------------------------------------------------------------
 
