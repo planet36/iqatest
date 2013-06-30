@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2011  Steve Ward
+# Copyright (C) 2013 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,18 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+export VCS_REPOS_MATCH='( -type d -and ( -name CVS -or -name .svn -or -name .git -or -name .hg ) )'
+export VCS_REPOS_PRUNE="( ${VCS_REPOS_MATCH} -prune , -not ${VCS_REPOS_MATCH} )"
 
 # allow
 
-find -type d | xargs chmod go+rx || exit 1
-find -type f | xargs chmod go+r  || exit 1
+find ${VCS_REPOS_PRUNE} -type d -print0 | xargs --null --no-run-if-empty chmod go+rx || exit
+find ${VCS_REPOS_PRUNE} -type f -print0 | xargs --null --no-run-if-empty chmod go+r  || exit
 
 # forbid
 
-chmod go-rwx generate-image-paths.php || exit 1
+chmod go-rwx generate-image-paths.php || exit
 
-find ./results         | xargs chmod go-rwx || exit 1
-find ./images/original | xargs chmod go-rwx || exit 1
+find ./results         ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
+find ./images/original ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
 
-find -type f -name '*.sh' | xargs chmod 700 || exit 1
-find -type f -name 'index.html' | xargs chmod 444 || exit 1
+find ${VCS_REPOS_PRUNE} -type f -name '*.sh' -print0 | xargs --null --no-run-if-empty chmod 700 || exit
+find ${VCS_REPOS_PRUNE} -type f -name 'index.html' -print0 | xargs --null --no-run-if-empty chmod 444 || exit
