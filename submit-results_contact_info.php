@@ -1,14 +1,11 @@
 <?
 
-// MAINTAINER: change the email address below
-$to = 'results@example.com';
+$to = 'results@iqatest.com';
 
 $cc = '';
 
-// MAINTAINER: change the email address below
-$from = 'results@example.com';
+$from = 'results@iqatest.com';
 
-// MAINTAINER: change the email address below
-$reply_to = 'results@example.com';
+$reply_to = 'results@iqatest.com';
 
 ?>
