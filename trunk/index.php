@@ -1,9 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">-->
 
 <!--
 
 Image Quality Assessment Test
-Copyright (C) 2011  Steve Ward
+Copyright (C) 2013 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,11 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html lang="en">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">-->
 
 <head>
 
-<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+<meta charset="utf-8">
+<!--<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />-->
 
 <title>Image Quality Assessment Test</title>
 
@@ -45,8 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 
-<noscript style="color: red;">
-<p>JavaScript is disabled. You must <a href="http://www.google.com/search?q=enable+JavaScript">enable JavaScript</a> to participate in this experiment.</p>
+<noscript style="color: red; font-weight: bold; font-size: larger;">
+<p><strong>JavaScript is disabled.</strong> You must <a href="https://www.google.com/search?q=enable+JavaScript">enable JavaScript</a> to participate in this experiment.</p>
 </noscript>
 
 
@@ -61,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <h3>Introduction</h3>
 
-<p>This research survey is being conducted by graduate students in the <a href="http://www.ist.ucf.edu/phd/index.html">Modeling and Simulation</a> program at the <a href="http://www.ucf.edu/">University of Central Florida</a>.  The purpose of this research is to investigate a threshold at which a typical human visual system can perceive distortions in compressed images.</p>
+<p>This research survey is being conducted by graduate students in the <a href="http://www.ist.ucf.edu/grad/index.html">Modeling and Simulation</a> program at the <a href="http://www.ucf.edu/">University of Central Florida</a>.  The purpose of this research is to investigate a threshold at which a typical human visual system can perceive distortions in compressed images.</p>
 
 <h3>Participation</h3>
 <p>Participation in this survey is voluntary.  You may refuse to participate or you may withdraw at any time without consequences.  To withdraw at any time, close the browser window.  If you withdraw before completion, no results will be submitted.  You must be at least 18 years of age to participate.</p>
@@ -71,12 +74,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <p>This survey involves the following.</p>
 <ol>
 <li>Completing a brief questionnaire about your demographic information.</li>
-<li>Comparing many pairs of images side-by-side and deciding if they are identical or different.  After the final comparison is made, the results will be submitted automatically.</li>
+<li>Comparing many pairs of <a href="image_credits.html">images</a> side-by-side and deciding if they are identical or different.  After the final comparison is made, the results will be submitted automatically.</li>
 </ol>
 
 <h3>Time required</h3>
 
-<p>Completing this survey takes approximately 7 to 15 minutes.  There is no time limit.</p>
+<p>Completing this survey takes approximately 7 to 14 minutes.  There is no time limit.</p>
 
 <h3>Risks and discomforts</h3>
 
@@ -96,9 +99,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <h3>Contact information</h3>
 
-<? include 'question_email_message.html'; ?>
+<? include('question_email_message.html'); ?>
 
-<button type="button" onclick="javascript:transition_from_to('div_informed_consent', 'form_participant_information'); iqatest.initialize();">I agree to participate.</button>
+<button type="button" onclick="javascript:transition_from_to('div_informed_consent', 'form_participant_information'); iqatest.initialize();">I agree to participate</button>
 
 </div>
 
@@ -108,7 +111,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 
+<!--
+##### html5 <form> can't have an empty action string
 <form id="form_participant_information" style="display: none;" action="">
+-->
+<form id="form_participant_information" style="display: none;">
 
 <h2>Participant Information</h2>
 
@@ -293,14 +300,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
-	<td><img src="images/practice_set/distorted_severe.jpg" alt="image A" /></td>
-	<td><img src="images/practice_set/reference.png" alt="image B" /></td>
+	<td><img alt="image A" src="images/practice_set/distorted_severe.jpg" /></td>
+	<td><img alt="image B" src="images/practice_set/reference.png"        /></td>
 </tr>
 
 <tr>
-	<!--
-	<td colspan="2"><button type="button" onclick="javascript:transition_from_to_timeout('div_practice_image_comparison_1', 'div_practice_image_comparison_2', iqatest.interstimulus_interval);">Identical</button></td>
-	-->
 	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
 </tr>
 
@@ -310,9 +314,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<? include 'perception_instructions_message.html'; ?>
+<? include('perception_instructions_message.html'); ?>
 
-<? include 'question_email_message.html'; ?>
+<? include('question_email_message.html'); ?>
 
 </div>
 
@@ -328,7 +332,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <p>These images are <em>identical</em>.</p>
 
-<p>There is a chance that both images will be the same.</p>
+<!--<p>There is a 25% chance that both images will be identical.</p>-->
 
 <p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
 
@@ -339,8 +343,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
-	<td><img src="images/practice_set/reference.png" alt="image A" /></td>
-	<td><img src="images/practice_set/reference.png" alt="image B" /></td>
+	<td><img alt="image A" src="images/practice_set/reference.png" /></td>
+	<td><img alt="image B" src="images/practice_set/reference.png" /></td>
 </tr>
 
 <tr>
@@ -348,17 +352,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
-	<!--
-	<td colspan="2"><button type="button" onclick="javascript:transition_from_to_timeout('div_practice_image_comparison_2', 'div_practice_image_comparison_3', iqatest.interstimulus_interval);">Different</button></td>
-	-->
 	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Different</button></td>
 </tr>
 
 </table>
 
-<? include 'perception_instructions_message.html'; ?>
+<? include('perception_instructions_message.html'); ?>
 
-<? include 'question_email_message.html'; ?>
+<? include('question_email_message.html'); ?>
 
 </div>
 
@@ -385,26 +386,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
-	<td><img src="images/practice_set/reference.png" alt="image A" /></td>
-	<td><img src="images/practice_set/distorted_subtle.jpg" alt="image B" /></td>
+	<td><img alt="image A" src="images/practice_set/reference.png"        /></td>
+	<td><img alt="image B" src="images/practice_set/distorted_subtle.jpg" /></td>
 </tr>
 
 <tr>
-	<!--
-	<td colspan="2"><button type="button" onclick="javascript:transition_from_to('div_practice_image_comparison_3', 'div_instructions_last');">Identical</button></td>
-	-->
 	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
 </tr>
 
 <tr>
-	<td colspan="2"><button type="button" onclick="javascript:transition_from_to('div_practice_image_comparison_3', 'div_instructions_last');">Different</button></td>
+	<td colspan="2"><button type="button" onclick="javascript:transition_from_to('div_practice_image_comparison_3', 'div_practice_image_comparison_4');">Different</button></td>
 </tr>
 
 </table>
 
-<? include 'perception_instructions_message.html'; ?>
+<? include('perception_instructions_message.html'); ?>
 
-<? include 'question_email_message.html'; ?>
+<? include('question_email_message.html'); ?>
+
+</div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<div id="div_practice_image_comparison_4" style="display: none;">
+
+<h2>Practice Image Comparison</h2>
+
+<p>These images are <em>wholly different</em>.</p>
+
+<!--<p>There is a 25% chance that both images will be wholly different.</p>-->
+
+<p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
+
+<table class="centered">
+
+<tr>
+	<th colspan="2">Are the images identical or different?</th>
+</tr>
+
+<tr>
+	<td><img alt="image A" src="images/practice_set/anti-reference.png" /></td>
+	<td><img alt="image B" src="images/practice_set/reference.png"      /></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button type="button" onclick="javascript:alert('Try again. Look closer.\nNo feedback will be given during the actual experiment.');">Identical</button></td>
+</tr>
+
+<tr>
+	<td colspan="2"><button type="button" onclick="javascript:transition_from_to('div_practice_image_comparison_4', 'div_instructions_last');">Different</button></td>
+</tr>
+
+</table>
+
+<? include('perception_instructions_message.html'); ?>
+
+<? include('question_email_message.html'); ?>
 
 </div>
 
@@ -443,8 +484,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
+	<!--
+	##### html5 <img> can't have an empty src string
 	<td><img id="img_A" src="" alt="image A" /></td>
 	<td><img id="img_B" src="" alt="image B" /></td>
+	-->
+	<td><img id="img_A" alt="image A" src="#" /></td>
+	<td><img id="img_B" alt="image B" src="#" /></td>
 </tr>
 
 <tr>
@@ -459,35 +505,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <br />
 
+<? include('perception_instructions_message.html'); ?>
+
 <div id="div_progress" class="centered" title="progress"></div>
 
-<? include 'perception_instructions_message.html'; ?>
-
-<? include 'question_email_message.html'; ?>
+<? include('question_email_message.html'); ?>
 
 </div>
-
-
-<!--
-/******************************************************************************/
--->
-
-
-<form id="form_results" style="display: none;" action="submit-results.php" method="post" onsubmit="javascript:return iqatest.encode_results();">
-
-<h2>Submit Results</h2>
-
-<div>
-
-<!-- the "name" attribute is necessary for the data to be sent -->
-
-<input type="hidden" id="results" name="results" value="" />
-
-<button type="submit">Submit Results</button>
-
-</div>
-
-</form>
 
 
 <!--
@@ -504,7 +528,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 
-<div id="div_debug" style="display: none;">
+<div id="div_debug" class="centered" style="display: none; border: medium dotted blue;">
+
+<h2>Debug</h2>
 
 <hr />
 
@@ -560,12 +586,34 @@ image set <span id="image_set_progress"></span>
 
 <hr />
 
-[<a href="http://validator.w3.org/check?uri=referer">Valid XHTML 1.1</a>]
+[<a href="http://validator.w3.org/check?uri=referer">Valid HTML5</a>]
 [<a href="http://jigsaw.w3.org/css-validator/check/referer">Valid CSS</a>]
 
 <hr />
 
 </div>
+
+
+<!--
+/******************************************************************************/
+-->
+
+
+<form id="form_results" class="centered" style="display: none; border: medium dotted red;" action="submit-results.php" method="post" onsubmit="javascript:return iqatest.encode_results();">
+
+<h2>Submit Results</h2>
+
+<div>
+
+<!-- The "name" attribute is necessary for the data to be sent. -->
+
+<input type="hidden" id="results" name="results" value="" />
+
+<button type="submit">Submit Results</button>
+
+</div>
+
+</form>
 
 
 <!--
