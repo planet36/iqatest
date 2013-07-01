@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2011  Steve Ward
+# Copyright (C) 2013 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+declare -r EXT='tar.xz'
 
-tar --verbose --create --auto-compress --file archive-$(date +'%Y-%m-%d-%H-%M-%S').tar.bz2 *.html *.js *.php *.css *.txt || exit 1
+tar --verbose --create --auto-compress --file archive-$(date +'%Y-%m-%d-%H-%M-%S').${EXT} *.html *.js *.php *.css *.txt *.sh index.html.template || exit
 
-chmod go-rwx archive-* || exit 1
+chmod go-rwx archive-*.${EXT} || exit
