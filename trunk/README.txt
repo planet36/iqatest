@@ -7,4 +7,7 @@
 ##### what license to use in the SSIM code???
 
 
-grep --color --after-context=1 MAINTAINER *
+#grep --color --after-context=1 MAINTAINER *
+
+
+MAINTAINER: replace "iqatest.com" with your own domain
