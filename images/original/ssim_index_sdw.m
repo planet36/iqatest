@@ -1,4 +1,4 @@
-## Copyright (C) 2011 Steve Ward
+## Copyright (C) 2012 Steve Ward
 
 # This is an implementation of the algorithm for calculating the
 # Structural SIMilarity (SSIM) index between two images. Please refer
@@ -36,73 +36,73 @@ function [mssim, ssim_map] = ssim_index_sdw(
 
 
 # the default return values
-mssim = -Inf;
 ssim_map = -Inf;
+mssim = -Inf;
 
 
-# only 2, 3, or 4 args may be given
+# Only 2, 3, or 4 args may be given.
 if (nargin < 2 || nargin > 4)
 	return;
 end
 
 
-# convert a color image to gray-scale
+# Convert a color image to gray-scale.
 if (isrgb(img1))
 	img1 = rgb2gray(img1);
 end
 
 
-# convert a color image to gray-scale
+# Convert a color image to gray-scale.
 if (isrgb(img2))
 	img2 = rgb2gray(img2);
 end
 
 
-# the images must be gray-scale
+# The images must be gray-scale.
 if (!isgray(img1) || !isgray(img2))
 	return;
 end
 
 
-# the images must be the same size
+# The images must be the same size.
 if (size(img1) != size(img2))
 	return;
 end
 
 
-# the size of the images must be at least the size of the window
+# The size of the images must be at least the size of the window.
 if (any(size(img1) < size(window)))
 	return
 end
 
 
-# the size of the window must be at least [2 2]
+# The size of the window must be at least (2, 2).
 if (any(size(window) < 2))
 	return
 end
 
 
-# the images must be different
+# The images should be different.
 if (img1 == img2)
-	mssim = 1;
 	ssim_map = ones(size(img1));
+	mssim = 1;
 	return;
 end
 
 
-# K must be an array of length 2
+# K must be an array of length 2.
 if (numel(K) != 2)
 	return;
 end
 
 
-# K must be >= 0 and << 1
+# K must be >= 0 and << 1.
 if (any(K < 0) || any(K >= 0.1))
 	return;
 end
 
 
-# normalize the window
+# Normalize the window.
 # if the window is always a gaussian, this step is unnecessary
 
 window_sum = sum(sum(window));
@@ -118,7 +118,7 @@ if (window_sum != 1)
 end
 
 
-# convert the images to double
+# Convert the images to double.
 img1 = im2double(img1);
 img2 = im2double(img2);
 
@@ -176,6 +176,13 @@ denominator1 = mu1_sq + mu2_sq + C(1);
 denominator2 = sigma1_sq + sigma2_sq + C(2);
 
 ssim_map = (numerator1 .* numerator2) ./ (denominator1 .* denominator2);
+
+
+#numerator = (2 * mu1_mu2 + C(1)) .* (2 * sigma12 + C(2));
+
+#denominator = (mu1_sq + mu2_sq + C(1)) .* (sigma1_sq + sigma2_sq + C(2));
+
+#ssim_map = numerator ./ denominator;
 
 
 mssim = mean2(ssim_map);
