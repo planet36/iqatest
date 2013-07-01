@@ -2,7 +2,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2011  Steve Ward
+Copyright (C) 2013 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -413,7 +413,7 @@ function get_random_int_2(a, b)
 
 // Shuffle the elements in the array.
 /**
-\sa http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+\sa https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 */
 function array_shuffle(arr)
 {
@@ -424,10 +424,10 @@ function array_shuffle(arr)
 		return
 	}
 
-	// for every element
+	// for every element,
 	for (var i = 0; i < n - 1; ++i)
 	{
-		// the element to swap
+		// get the index of the element to swap
 		var j = get_random_int_2(i, n)
 
 		if (i == j)
