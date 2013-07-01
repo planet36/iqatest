@@ -3,7 +3,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2011  Steve Ward
+Copyright (C) 2013 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,11 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // http://pear.php.net/package/Mail_Mime/
-require_once 'Mail/mime.php';
+require_once('Mail/mime.php');
 
-require_once 'json_error_to_string.php';
+require_once('json_error_to_string.php');
 
-require_once 'submit-results_contact_info.php';
+require_once('submit-results_contact_info.php');
+//##### eventually just put the addresses in this file
+
+require_once('utime.php');
 
 
 //------------------------------------------------------------------------------
@@ -41,7 +44,7 @@ $iqatest_url = 'http://' . $iqatest_host_name;
 
 if (!isset($_SERVER['HTTP_REFERER']))
 {
-	// redirect user agent to main page
+	// Redirect user agent to main page.
 	header('Location: ' . $iqatest_url);
 	exit;
 }
@@ -52,7 +55,7 @@ $referer_host_name = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
 
 if ($referer_host_name != $iqatest_host_name)
 {
-	// redirect user agent to main page
+	// Redirect user agent to main page.
 	header('Location: ' . $iqatest_url);
 	exit;
 }
@@ -60,7 +63,7 @@ if ($referer_host_name != $iqatest_host_name)
 
 if (!array_key_exists('results', $_POST))
 {
-	// redirect user agent to main page
+	// Redirect user agent to main page.
 	header('Location: ' . $iqatest_url);
 	exit;
 }
@@ -70,12 +73,13 @@ if (!array_key_exists('results', $_POST))
 
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">-->
 
 <!--
 
 Image Quality Assessment Test
-Copyright (C) 2011  Steve Ward
+Copyright (C) 2013 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -91,11 +95,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html lang="en">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">-->
 
 <head>
 
-<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+<meta charset="utf-8">
+<!--<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />-->
 
 <title>Image Quality Assessment Test</title>
 
@@ -119,7 +125,9 @@ try
 //------------------------------------------------------------------------------
 
 
-$id         = time();
+//##### remove this later:
+//#####$id         = time();
+$id         = utime();
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $host_name  = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -159,8 +167,8 @@ $results_exported_string = <<<EOT
 \$results_exported = $results_exported;
 
 ?>
-
-EOT;
+EOT
+;
 
 
 //------------------------------------------------------------------------------
@@ -198,14 +206,26 @@ if ($bytes_written === false)
 
 $subject = 'iqatest results ' . $id;
 
-$body_text = '';
-$body_text .= "//------------------------------------------------------------------------------\n\n";
-$body_text .= '$_POST = ' . var_export($_POST, true) . ";\n\n";
-$body_text .= "//------------------------------------------------------------------------------\n\n";
-$body_text .= '$_SERVER = ' . var_export($_SERVER, true) . ";\n\n";
-$body_text .= "//------------------------------------------------------------------------------\n\n";
+$tmp1 = var_export($_POST, true);
+$tmp2 = var_export($_SERVER, true);
 
-$attachment_name = 'iqatest_results_' . $id . '.php.gz';
+$body_text = <<<EOT
+//------------------------------------------------------------------------------
+
+\$_POST = $tmp1;
+
+//------------------------------------------------------------------------------
+
+\$_SERVER = $tmp2;
+
+//------------------------------------------------------------------------------
+
+EOT
+;
+
+
+unset($tmp1);
+unset($tmp2);
 
 
 //------------------------------------------------------------------------------
@@ -228,11 +248,9 @@ $mime->setSubject($subject);
 $mime->setTxtBody($body_text);
 //$mime->setHTMLBody($body_html);
 
+$attachment_name = 'iqatest_results_' . $id . '.php.gz';
+
 $mime->addAttachment($results_exported_file_name, 'application/x-gzip', $attachment_name);
-
-
-//------------------------------------------------------------------------------
-
 
 // get() must be called before headers()
 $body = $mime->get();
@@ -245,14 +263,14 @@ $headers = $mime->txtHeaders();
 //------------------------------------------------------------------------------
 
 
-// send the results
+// Send the results.
 if (!mail($to, $subject, $body, $headers))
 {
 	throw new Exception('"mail" function failed.');
 }
 
 
-// delete the file
+// Delete the file.
 if (!unlink($results_exported_file_name))
 {
 	throw new Exception('"unlink" function failed.');
@@ -275,14 +293,32 @@ catch (Exception $e)
 
 $subject = 'iqatest problem ' . $id;
 
-$body_text = '';
-$body_text .= "//------------------------------------------------------------------------------\n\n";
-$body_text .= '$_POST = ' . var_export($_POST, true) . ";\n\n";
-$body_text .= "//------------------------------------------------------------------------------\n\n";
-$body_text .= '$_SERVER = ' . var_export($_SERVER, true) . ";\n\n";
-$body_text .= "//------------------------------------------------------------------------------\n\n";
-$body_text .= '// ' . $e->getMessage() . "\n\n";
-$body_text .= "//------------------------------------------------------------------------------\n\n";
+$tmp1 = var_export($_POST, true);
+$tmp2 = var_export($_SERVER, true);
+$tmp3 = $e->getMessage();
+
+$body_text = <<<EOT
+//------------------------------------------------------------------------------
+
+\$_POST = $tmp1;
+
+//------------------------------------------------------------------------------
+
+\$_SERVER = $tmp2;
+
+//------------------------------------------------------------------------------
+
+// $tmp3
+
+//------------------------------------------------------------------------------
+
+EOT
+;
+
+
+unset($tmp1);
+unset($tmp2);
+unset($tmp3);
 
 
 //------------------------------------------------------------------------------
@@ -327,10 +363,20 @@ if (!mail($to, $subject, $body, $headers))
 }
 
 
-print "<p>There was an error.  Your results were <b>not</b> submitted.</p>\n";
-print "<p>The problem has been reported.</p>\n";
-print "\n";
-print "<blockquote><p>" . $e->getMessage() . "</p></blockquote>\n";
+$tmp1 = $e->getMessage();
+
+
+print(<<<EOT
+<p>There was an error.  Your results were <b>not</b> submitted.</p>
+<p>The problem has been reported.</p>
+
+<blockquote><p>$tmp1</p></blockquote>
+EOT
+);
+
+
+unset($tmp1);
+
 
 }
 
@@ -339,9 +385,7 @@ print "<blockquote><p>" . $e->getMessage() . "</p></blockquote>\n";
 
 ?>
 
-<? include 'question_email_message.html'; ?>
-
-<p><a href="image_credits.html">Image Credits</a></p>
+<? include('question_email_message.html'); ?>
 
 </div>
 
