@@ -27,7 +27,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 example:
 
-php process-results.php iqatest_results_*.php | sort | uniq > iqatest_results_$(date +'%Y%m%d_%H%M%S').csv
+gzip --decompress iqatest_results_*.php.gz
+
+TMP_OUTFILE=iqatest_results_TMP.csv
+
+php process-results.php iqatest_results_*.php | sort | uniq > "${TMP_OUTFILE}"
+
+OUTFILE=iqatest_results_$(date +'%Y%m%d_%H%M%S').csv
+
+# Put the last line (column names) at the top.
+tail --lines=1 "${TMP_OUTFILE}" > "${OUTFILE}"
+head --lines=-1 "${TMP_OUTFILE}" >> "${OUTFILE}"
+#{ tail --lines=1 "${TMP_OUTFILE}" ; head --lines=-1 "${TMP_OUTFILE}" ; } > "${OUTFILE}"
+
+rm "${TMP_OUTFILE}"
+
+chmod go-rwx "${OUTFILE}"
 
 */
 
@@ -35,9 +50,9 @@ php process-results.php iqatest_results_*.php | sort | uniq > iqatest_results_$(
 //------------------------------------------------------------------------------
 
 
-require_once 'array_flatten.php';
+require_once('array_flatten.php');
 
-require_once 'quote_csv.php';
+require_once('quote_csv.php');
 
 
 //------------------------------------------------------------------------------
@@ -55,25 +70,80 @@ $script_name = basename(__FILE__);
 //------------------------------------------------------------------------------
 
 
-function print_usage_message()
-{
-	global $script_name;
+// default values
 
-	print "Usage: php $script_name [--version] [--help] [--verbose] RESULTS_PHP_FILE ...\n";
-	print "Process the RESULTS_PHP_FILE(s) and print the output in CSV format.\n";
-	print "  --version : Print the version information and exit.\n";
-	print "  --help : Print this message and exit.\n";
-	print "  --verbose : Print extra output. (default OFF)\n";
-	print "  RESULTS_PHP_FILE : A PHP file with results submitted from the iqatest.\n";
-}
+$default_verbose = false;
 
+
+// mutable values
+
+$verbose  = $default_verbose;
 
 //------------------------------------------------------------------------------
 
 
-// default values
+function print_help()
+{
+	global $script_name;
+	global $default_verbose;
 
-$verbose = false;
+	print(<<<EOT
+Usage: php $script_name [--version] [--help] [--verbose] RESULTS_PHP_FILE ...
+Process the RESULTS_PHP_FILE(s) and print the output in CSV format.
+  --version : Print the version information and exit.
+  --help : Print this message and exit.
+  --verbose : Print extra output. (default $default_verbose)
+  RESULTS_PHP_FILE : A PHP file with results submitted from the iqatest.
+EOT
+);
+
+	exit(0);
+}
+
+
+/// Print the version information and exit.
+function print_version()
+{
+	global $script_name;
+
+	print("$script_name 2011-08-28\n");
+
+	print("Written by Steve Ward\n");
+
+	exit(0);
+}
+
+
+/// Print the message if verbose mode is on.
+function print_verbose($s)
+{
+	global $verbose;
+
+	if ($verbose)
+	{
+		print("# $s\n");
+	}
+}
+
+
+/// Print the warning message and continue.
+function print_warning($s)
+{
+	fwrite(STDERR, "Warning: $s\n");
+}
+
+
+/// Print the error message and exit.
+function print_error($s)
+{
+	global $script_name;
+
+	fwrite(STDERR, "Error: $s\n");
+
+	fwrite(STDERR, "Try '$script_name --help' for more information.\n");
+
+	exit(1);
+}
 
 
 //------------------------------------------------------------------------------
@@ -93,9 +163,9 @@ $long_options = array('version', 'help', 'verbose',);
 
 $options = getopt(null, $long_options);
 
-if (isset($options['version'])) {print $script_name . " 2010-08-17\n"; print "Copyright (C) 2011  Steve Ward\n"; exit;}
+if (isset($options['version'])) {print_version();}
 
-if (isset($options['help'])) {print_usage_message(); exit;}
+if (isset($options['help'])) {print_help();}
 
 if (isset($options['verbose'])) {$verbose = true; assert(array_shift($argv) != null); --$argc;}
 
@@ -105,9 +175,7 @@ if (isset($options['verbose'])) {$verbose = true; assert(array_shift($argv) != n
 
 if ($argc < 1)
 {
-	print "Error: Must give at least 1 file.\n";
-	print_usage_message();
-	exit(1);
+	print_error("Must give at least 1 file.");
 }
 
 
@@ -116,21 +184,17 @@ if ($argc < 1)
 
 function process_results_to_array($results_exported_file_name)
 {
-	global $verbose;
+	//#####
+	//global $verbose;
 
 	// $results_exported is instantiated
-	require_once $results_exported_file_name;
+	require_once($results_exported_file_name);
 
 	assert(isset($results_exported));
 
 	// $results_exported has the results that were submitted
 
-	if ($verbose)
-	{
-		print 'results_exported: ';
-		print_r($results_exported);
-		print "\n";
-	}
+	print_verbose('results_exported: ' . print_r($results_exported, true));
 
 	//--------------------------------------------------------------------------
 
@@ -230,36 +294,36 @@ function process_results_to_array($results_exported_file_name)
 }
 
 
+//------------------------------------------------------------------------------
+
 
 // each arg is a file name of exported results
 foreach ($argv as $results_exported_file_name)
 {
+	if (!file_exists($results_exported_file_name))
+	{
+		continue;
+	}
+
+	if (filesize($results_exported_file_name) == 0)
+	{
+		continue;
+	}
+
 	// get the results array from the exported results in the file
 	$results_array = process_results_to_array($results_exported_file_name);
-
-	if ($verbose)
-	{
-		print 'results_array: ';
-		print_r($results_array);
-		print "\n";
-	}
+	print_verbose('results_array: ' . print_r($results_array, true));
 
 	// flatten the results array
 	$results_array_flattened = array_flatten($results_array);
-
-	if ($verbose)
-	{
-		print 'results_array_flattened: ';
-		print_r($results_array_flattened);
-		print "\n";
-	}
+	print_verbose('results_array_flattened: ' . print_r($results_array_flattened, true));
 
 	// convert the flattened results array to a CSV string
-	print implode(',', array_map('quote_csv', array_keys($results_array_flattened))) . "\n";
-	print implode(',', array_map('quote_csv', array_values($results_array_flattened))) . "\n";
+	print(implode(',', array_map('quote_csv', array_keys($results_array_flattened))) . "\n");
+	print(implode(',', array_map('quote_csv', array_values($results_array_flattened))) . "\n");
 }
 
 
-// 264 209 189
+// 264 209 189 305
 
 ?>
