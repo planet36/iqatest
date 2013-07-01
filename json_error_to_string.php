@@ -3,7 +3,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2011  Steve Ward
+Copyright (C) 2013 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //------------------------------------------------------------------------------
 
 
-// constant 'JSON_ERROR_UTF8' exists in PHP PHP 5.3.3+
+// constant 'JSON_ERROR_UTF8' exists in PHP 5.3.3+
 if (!defined('JSON_ERROR_UTF8'))
 {
 	define('JSON_ERROR_UTF8', 5);
@@ -31,6 +31,9 @@ if (!defined('JSON_ERROR_UTF8'))
 
 
 // convert the json error value to a string
+/**
+\sa http://php.net/manual/en/function.json-last-error.php
+*/
 function json_error_to_string($error)
 {
 	switch ($error)
