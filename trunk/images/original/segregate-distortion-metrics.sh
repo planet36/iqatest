@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2011  Steve Ward
+# Copyright (C) 2013 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,20 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 # Usage:
 #
 # time ./segregate-distortion-metrics.sh -v $(find -type f -name metrics.csv)
-#
-# (takes less than 1 sec. per metrics file)
-
 
 renice 19 --pid $$ > /dev/null
 
 
-SCRIPT_NAME="$(basename -- "${0}")" || exit 1
+SCRIPT_NAME=$(basename -- "${0}") || exit
 
 VERBOSE=false
+
+source distortions.sh || exit
 
 
 #-------------------------------------------------------------------------------
@@ -37,8 +35,8 @@ VERBOSE=false
 function print_version
 {
 	cat <<EOT
-${SCRIPT_NAME} 2010-04-24
-Copyright (C) 2011 Steve Ward
+${SCRIPT_NAME} 2013-02-04
+Copyright (C) 2013 Steve Ward
 EOT
 }
 
@@ -58,15 +56,18 @@ EOT
 
 function print_error
 {
-	printf "Error: ${1}\n" > /dev/stderr
-	print_usage
+	printf 'Error: ' 1>&2
+	printf -- "${@}" 1>&2
+	printf '\n' 1>&2
+
+	printf 'Try "%q -h" for more information.\n' "${SCRIPT_NAME}" 1>&2
 	exit 1
 }
 
 
 function print_verbose
 {
-	${VERBOSE} && printf "${1}\n"
+	${VERBOSE} && { printf -- "${@}" ; printf '\n' ; }
 }
 
 
@@ -100,7 +101,7 @@ do
 done
 
 
-shift $((OPTIND - 1)) || exit 1
+shift $((OPTIND - 1)) || exit
 
 
 #-------------------------------------------------------------------------------
@@ -110,24 +111,6 @@ if (($# < 1))
 then
 	print_error "Must give at least 1 file."
 fi
-
-
-#-------------------------------------------------------------------------------
-
-
-declare -r -a DISTORTIONS=(
-	'quality'
-	'scale'
-	'blur'
-	'gaussian-blur'
-	'sharpen'
-	'unsharp'
-	'median'
-	'salt-pepper-noise'
-	'gaussian-noise'
-	'speckle-noise'
-)
-print_verbose "DISTORTIONS=(${DISTORTIONS[*]})"
 
 
 #-------------------------------------------------------------------------------
@@ -148,7 +131,7 @@ do
 
 	#---------------------------------------------------------------------------
 
-	IMAGE_SET="$(dirname -- "${METRICS_CSV_FILE}")" || exit 1
+	IMAGE_SET=$(dirname -- "${METRICS_CSV_FILE}") || exit
 	print_verbose "IMAGE_SET=${IMAGE_SET}"
 
 	#---------------------------------------------------------------------------
@@ -160,7 +143,8 @@ do
 		SEGREGATED_METRICS_CSV_FILE="${IMAGE_SET}/metrics_${DISTORTION}.csv"
 		print_verbose "SEGREGATED_METRICS_CSV_FILE=${SEGREGATED_METRICS_CSV_FILE}"
 
-		head --lines=1 -- "${METRICS_CSV_FILE}" > "${SEGREGATED_METRICS_CSV_FILE}" || exit 1
+		# Get the header of the metrics file.
+		head --lines=1 -- "${METRICS_CSV_FILE}" > "${SEGREGATED_METRICS_CSV_FILE}" || exit
 
 		grep -- "^distorted_${DISTORTION}" "${METRICS_CSV_FILE}" >> "${SEGREGATED_METRICS_CSV_FILE}"
 		if (($? > 1))
