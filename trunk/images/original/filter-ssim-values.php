@@ -3,7 +3,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2011  Steve Ward
+Copyright (C) 2013 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,24 +20,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-//------------------------------------------------------------------------------
-
-
 /*
 
-example:
+Usage:
 
-php filter-ssim-values.php --verbose ./red_apple/metrics_jpeg.csv
-php filter-ssim-values.php           ./red_apple/metrics_jpeg.csv
+php filter-ssim-values.php --verbose ./red_apple/metrics_quality.csv
+php filter-ssim-values.php           ./red_apple/metrics_quality.csv
 
-php filter-ssim-values.php --verbose $(find -type f -name metrics_jpeg.csv)
-php filter-ssim-values.php           $(find -type f -name metrics_jpeg.csv)
+php filter-ssim-values.php --verbose $(find -type f -name metrics_quality.csv | sort)
+php filter-ssim-values.php           $(find -type f -name metrics_quality.csv | sort)
 
-php filter-ssim-values.php --verbose --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_jpeg.csv
-php filter-ssim-values.php           --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_jpeg.csv
+php filter-ssim-values.php --verbose --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_quality.csv
+php filter-ssim-values.php           --min=0.82 --max=1.00 --inc=0.02 ./{albert_einstein,arnisee_region,bald_eagle,desiccated_sewage,red_apple,sonderho_windmill}/metrics_quality.csv
 
-php filter-ssim-values.php --verbose --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_jpeg.csv
-php filter-ssim-values.php           --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_jpeg.csv
+php filter-ssim-values.php --verbose --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_quality.csv
+php filter-ssim-values.php           --min=0.82 --max=0.90 --inc=0.08 ./gizah_pyramids/metrics_quality.csv
 
 */
 
@@ -54,41 +51,106 @@ if (assert_options(ASSERT_BAIL, 1) === false)
 $script_name = basename(__FILE__);
 
 
-
-
-//##### add print_verbose and print_error functions
-
-
-
-//------------------------------------------------------------------------------
-
-
-function print_usage_message()
-{
-	global $script_name;
-
-	print "Usage: php $script_name [--version] [--help] [--verbose] --min=MIN --max=MAX --inc=INC METRICS_CSV_FILE ...\n";
-	print "Filter the METRICS_CSV_FILE(s) for SSIM values that are closest to the given range.\n";
-	print "  --version : Print the version information and exit.\n";
-	print "  --help : Print this message and exit.\n";
-	print "  --verbose : Print extra output. (default OFF)\n";
-	print "  --min=MIN : The minimum SSIM value. (default 0.82)\n";
-	print "  --max=MAX : The maximum SSIM value. (default 1.00)\n";
-	print "  --inc=INC : The increment of the SSIM values. (default 0.02)\n";
-	print "  METRICS_CSV_FILE : A CSV file with the metrics of distorted images. The distorted image is the first field and the SSIM is the second field.\n";
-}
-
-
 //------------------------------------------------------------------------------
 
 
 // default values
 
-$verbose = false;
+$default_verbose = false;
 
-$ssim_min = 0.82;
-$ssim_max = 1.00;
-$ssim_inc = 0.02;
+$default_ssim_min = 0.82;
+$default_ssim_max = 1.00;
+$default_ssim_inc = 0.02;
+
+$default_limit = 0;
+
+
+// mutable values
+
+$verbose  = $default_verbose;
+
+$ssim_min = $default_ssim_min;
+$ssim_max = $default_ssim_max;
+$ssim_inc = $default_ssim_inc;
+
+$limit    = $default_limit;
+
+
+//------------------------------------------------------------------------------
+
+
+/// Print the help message and exit.
+function print_help()
+{
+	global $script_name;
+	global $default_verbose;
+	global $default_ssim_min;
+	global $default_ssim_max;
+	global $default_ssim_inc;
+	global $default_limit;
+
+	print(<<<EOT
+Usage: php $script_name [--version] [--help] [--verbose] [--min=MIN] [--max=MAX] [--inc=INC] METRICS_CSV_FILE ...
+Filter the METRICS_CSV_FILE(s) for SSIM values that are closest to values in the given range.
+  --version : Print the version information and exit.
+  --help : Print this message and exit.
+  --verbose : Print extra output. (default $default_verbose)
+  --min=MIN : The minimum SSIM value. (default $default_ssim_min)
+  --max=MAX : The maximum SSIM value. (default $default_ssim_max)
+  --inc=INC : The increment of the SSIM values. (default $default_ssim_inc)
+  --limit=LIMIT : Print no more than LIMIT entries.  A limit of 0 means unlimited. (default $default_limit)
+  METRICS_CSV_FILE : A CSV file with the metrics of distorted images. The distorted image is the first field and the SSIM is the second field.
+
+EOT
+);
+
+	exit(0);
+}
+
+
+/// Print the version information and exit.
+function print_version()
+{
+	global $script_name;
+
+	print($script_name . " 2013-03-01\n");
+
+	print("Written by Steve Ward\n");
+
+	exit(0);
+}
+
+
+/// Print the message if verbose mode is on.
+function print_verbose($s)
+{
+	global $verbose;
+
+	if ($verbose)
+	{
+		print("# $s\n");
+	}
+}
+
+
+/// Print the warning message and continue.
+function print_warning($s)
+{
+	fwrite(STDERR, "Warning: $s\n");
+}
+
+
+/// Print the error message and exit.
+function print_error($s)
+{
+	global $script_name;
+
+	fwrite(STDERR, "Error: $s\n");
+
+	fwrite(STDERR, "Try '$script_name --help' for more information.\n");
+
+	exit(1);
+}
 
 
 //------------------------------------------------------------------------------
@@ -104,13 +166,13 @@ assert(array_shift($argv) != null);
 
 // http://www.php.net/manual/en/function.getopt.php
 
-$long_options = array('version', 'help', 'verbose', 'min:', 'max:', 'inc:',);
+$long_options = array('version', 'help', 'verbose', 'min:', 'max:', 'inc:', 'limit:',);
 
 $options = getopt(null, $long_options);
 
-if (isset($options['version'])) {print $script_name . " 2010-08-17\n"; print "Copyright (C) 2011  Steve Ward\n"; exit;}
+if (isset($options['version'])) {print_version();}
 
-if (isset($options['help'])) {print_usage_message(); exit;}
+if (isset($options['help'])) {print_help();}
 
 if (isset($options['verbose'])) {$verbose = true; assert(array_shift($argv) != null); --$argc;}
 
@@ -118,38 +180,39 @@ if (isset($options['min'])) {$ssim_min = floatval($options['min']); assert(array
 if (isset($options['max'])) {$ssim_max = floatval($options['max']); assert(array_shift($argv) != null); --$argc;}
 if (isset($options['inc'])) {$ssim_inc = floatval($options['inc']); assert(array_shift($argv) != null); --$argc;}
 
+if (isset($options['limit'])) {$limit = intval($options['limit']); assert(array_shift($argv) != null); --$argc;}
+
 
 //------------------------------------------------------------------------------
 
 
-//##### use print_error when it's available
 if ($ssim_min > $ssim_max)
 {
-	print "Error: MIN ($ssim_min) must be <= MAX ($ssim_max).\n";
-	print_usage_message();
-	exit(1);
+	print_error("MIN ($ssim_min) must be <= MAX ($ssim_max).");
 }
 
 assert($ssim_min <= $ssim_max);
 
 
-//##### use print_error when it's available
 if ($ssim_inc <= 0)
 {
-	print "Error: INC ($ssim_inc) must be > 0.\n";
-	print_usage_message();
-	exit(1);
+	print_error("INC ($ssim_inc) must be > 0.");
 }
 
 assert($ssim_inc > 0);
 
 
-//##### use print_error when it's available
+if ($limit < 0)
+{
+	print_error("LIMIT ($limit) must be >= 0.");
+}
+
+assert($limit >= 0);
+
+
 if ($argc < 1)
 {
-	print "Error: Must give at least 1 file.\n";
-	print_usage_message();
-	exit(1);
+	print_error("Must give at least 1 file.");
 }
 
 
@@ -194,24 +257,14 @@ function closest_value(array $arr, $x)
 
 foreach ($argv as $file_name)
 {
-	//print "\n";
-
 	//--------------------------------------------------------------------------
 
-	//##### use print_error when it's available
 	if (!file_exists($file_name))
 	{
-		print 'Error: File ' . escapeshellarg($file_name) . ' does not exist.' . "\n";
-		print_usage_message();
-		exit(1);
+		print_error('File ' . escapeshellarg($file_name) . ' does not exist.');
 	}
 
-	//##### use print_verbose when it's available
-	if ($verbose)
-	{
-		print 'file_name: ' . escapeshellarg($file_name) . "\n";
-		print "\n";
-	}
+	print_verbose('file_name: ' . escapeshellarg($file_name));
 
 	//--------------------------------------------------------------------------
 
@@ -241,13 +294,7 @@ foreach ($argv as $file_name)
 
 	assert(!empty($distorted_image_ssim_array));
 
-	//##### use print_verbose when it's available
-	if ($verbose)
-	{
-		print 'distorted_image_ssim_array: ';
-		print_r($distorted_image_ssim_array);
-		print "\n";
-	}
+	print_verbose('distorted_image_ssim_array: ' . print_r($distorted_image_ssim_array, true));
 
 	//--------------------------------------------------------------------------
 
@@ -262,19 +309,25 @@ foreach ($argv as $file_name)
 
 	assert(!empty($distorted_images));
 
-	//##### use print_verbose when it's available
-	if ($verbose)
+	print_verbose('distorted_images: ' . print_r($distorted_images, true));
+
+	$distorted_images_keys = array_keys($distorted_images);
+
+	print_verbose('distorted_images_keys: ' . print_r($distorted_images_keys, true));
+
+	if ($limit != 0)
 	{
-		print 'distorted_images: ';
-		print_r($distorted_images);
-		print "\n";
+		// calling 'count' every iteration is inefficient yet acceptable
+		while (count($distorted_images_keys) > $limit)
+		{
+			array_pop($distorted_images_keys);
+		}
 	}
 
-	//--------------------------------------------------------------------------
+	print_verbose('distorted_images_keys: ' . print_r($distorted_images_keys, true));
 
-	print dirname($file_name) . DIRECTORY_SEPARATOR . '{reference.png,{' . implode(',', array_keys($distorted_images)) . '}}' . "\n";
-
+	print(implode(',', $distorted_images_keys));
+	print("\n");
 }
-
 
 ?>
