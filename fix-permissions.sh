@@ -30,5 +30,5 @@ chmod go-rwx generate-image-paths.php || exit
 find ./results         ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
 find ./images/original ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
 
-find ${VCS_REPOS_PRUNE} -type f -name '*.sh' -print0 | xargs --null --no-run-if-empty chmod 700 || exit
+find ${VCS_REPOS_PRUNE} -type f -name '*.sh'       -print0 | xargs --null --no-run-if-empty chmod 700 || exit
 find ${VCS_REPOS_PRUNE} -type f -name 'index.html' -print0 | xargs --null --no-run-if-empty chmod 444 || exit
