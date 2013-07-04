@@ -17,7 +17,7 @@
 
 # Usage:
 #
-# time ./create-sets.sh -v $(basename --suffix=.jpg *.jpg)
+# time ./create-sets.sh -v $(basename --suffix=.jpg *.jpg | grep --invert-match gizah_pyramids)
 
 renice 19 --pid $$ > /dev/null
 
