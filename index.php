@@ -60,6 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="div_informed_consent" style="display: block;">
 
+<h1>Image Quality Assessment Test</h1>
+
 <h2>Informed Consent</h2>
 
 <h3>Introduction</h3>
@@ -99,7 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <h3>Contact information</h3>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 <button type="button" onclick="javascript:transition_from_to('div_informed_consent', 'form_participant_information'); iqatest.initialize();">I agree to participate</button>
 
@@ -263,15 +265,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <p>We are investigating how much distortion can be applied to an image before the distortion is perceived by a typical human observer.</p>
 
+<p>Before you begin making image comparisons, there is a brief practice session to make you familiar with the process.</p>
+
 <p>You will compare several pairs of <a href="http://en.wikipedia.org/wiki/Grayscale">grayscale</a> images side-by-side and determine if they are identical or different.  In all cases, one of the two images is a reference (i.e. non-distorted) image.  The other image is a copy of the reference image with a distortion (of varying degrees) possibly applied.  If there is a distortion applied, it may be subtle or severe.</p>
 
 <p>When comparing the images, you should consider them to be <em>identical</em> if you <em>cannot</em> perceive a difference between them.  You should consider them to be <em>different</em> if you <em>can</em> perceive a difference between them.  Whichever conclusion you draw, click the appropriate button (i.e. "Identical" or "Different").</p>
 
 <p>No feedback will be given after you make your comparisons.</p>
 
-<p>After a comparison is made, there is a small period in which the pair of images will disappear, the buttons will be disabled, a new pair of images will be presented, and the buttons will be enabled.  Continue making comparisons until your results are submitted.  When your results are submitted, you will be redirected to another page.</p>
-
-<p>Before you begin making image comparisons, there is a brief practice session to make you familiar with the process.</p>
+<p>After a comparison is made, there is a small period of time in which
+<ol>
+<li>the pair of images will disappear,</li>
+<li>the buttons will be disabled,</li>
+<li>a new pair of images will appear,</li>
+<li>and the buttons will be enabled.</li>
+</ol>
+Continue making comparisons until your results are submitted.  When your results are submitted, you will be redirected to another page.</p>
 
 <button type="button" onclick="javascript:transition_from_to_timeout('div_instructions_first', 'div_practice_image_comparison_1', iqatest.interstimulus_interval);">Begin practice image comparison</button>
 
@@ -314,9 +323,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<? include('perception_instructions_message.html'); ?>
+<?php include('perception_instructions_message.html'); ?>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 </div>
 
@@ -357,9 +366,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<? include('perception_instructions_message.html'); ?>
+<?php include('perception_instructions_message.html'); ?>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 </div>
 
@@ -400,9 +409,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<? include('perception_instructions_message.html'); ?>
+<?php include('perception_instructions_message.html'); ?>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 </div>
 
@@ -443,9 +452,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </table>
 
-<? include('perception_instructions_message.html'); ?>
+<?php include('perception_instructions_message.html'); ?>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 </div>
 
@@ -505,11 +514,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <br />
 
-<? include('perception_instructions_message.html'); ?>
+<?php include('perception_instructions_message.html'); ?>
 
 <div id="div_progress" class="centered" title="progress"></div>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 </div>
 

@@ -113,6 +113,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="div_submit_results">
 
+<h1>Image Quality Assessment Test</h1>
+
 <h2>Submit Results</h2>
 
 <?php
@@ -277,8 +279,11 @@ if (!unlink($results_exported_file_name))
 }
 
 
-print "<p>Your results were submitted.</p>\n";
-print "<p>Thanks for your participation.</p>\n";
+print(<<<EOT
+<p>Your results were submitted.</p>
+
+<p>Thanks for your participation.</p>
+EOT
 
 
 //------------------------------------------------------------------------------
@@ -368,6 +373,7 @@ $tmp1 = $e->getMessage();
 
 print(<<<EOT
 <p>There was an error.  Your results were <b>not</b> submitted.</p>
+
 <p>The problem has been reported.</p>
 
 <blockquote><p>$tmp1</p></blockquote>
@@ -385,7 +391,7 @@ unset($tmp1);
 
 ?>
 
-<? include('question_email_message.html'); ?>
+<?php include('question_email_message.html'); ?>
 
 </div>
 
