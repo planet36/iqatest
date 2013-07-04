@@ -1,4 +1,4 @@
-<?
+<?php
 
 $to = 'results@iqatest.com';
 
