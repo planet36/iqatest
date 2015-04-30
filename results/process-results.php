@@ -184,7 +184,7 @@ if ($argc < 1)
 
 function process_results_to_array($results_exported_file_name)
 {
-	//#####
+	//##### TODO: clean up this
 	//global $verbose;
 
 	// $results_exported is instantiated

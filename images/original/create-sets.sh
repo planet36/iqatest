@@ -157,7 +157,7 @@ do
 	#---------------------------------------------------------------------------
 
 
-	##### move this to outside the loop
+	##### TODO: move this to outside the loop
 
 	# Create the sets directory, if it doesn't exist.
 	if [[ ! -d "${SETS_DIRECTORY}" ]]
@@ -173,7 +173,7 @@ do
 	fi
 
 
-	##### if the DESTINATION already exists, mv it to make a backup
+	##### TODO: if the DESTINATION already exists, mv it to make a backup
 
 
 	# Create the destination directory, if it doesn't exist.

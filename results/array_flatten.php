@@ -98,7 +98,7 @@ function array_flatten(array $array, $key_separator = '/')
 
 		$diff_depth = $prev_depth - $curr_depth + 1;
 
-		// TODO: It would be nice to do this with a single function.
+		//##### TODO: It would be nice to do this with a single function.
 		while ($diff_depth > 0)
 		{
 			array_pop($keys);
