@@ -223,9 +223,9 @@ do
 	# Note: Do not use '-verbose' option for 'convert' because too much is printed.
 
 	# http://www.imagemagick.org/script/convert.php
-	COMMAND="convert ${REFERENCE_IMAGE} -strip"
+	COMMAND="convert ${REFERENCE_IMAGE}"
 	# http://www.graphicsmagick.org/convert.html
-	#COMMAND="gm convert ${REFERENCE_IMAGE} -strip"
+	#COMMAND="gm convert ${REFERENCE_IMAGE}"
 	print_verbose "COMMAND=${COMMAND}"
 
 	# This is necessary for the scale distortion.
