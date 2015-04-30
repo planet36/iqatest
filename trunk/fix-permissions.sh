@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2013 Steve Ward
+# Copyright (C) 2015 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ find ${VCS_REPOS_PRUNE} -type f -print0 | xargs --null --no-run-if-empty chmod g
 
 chmod go-rwx generate-image-paths.php || exit
 
-find ./results         ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
-find ./images/original ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
+find ./results    ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
+find ./images/src ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
 
 find ${VCS_REPOS_PRUNE} -type f -name '*.sh'       -print0 | xargs --null --no-run-if-empty chmod 700 || exit
 find ${VCS_REPOS_PRUNE} -type f -name 'index.html' -print0 | xargs --null --no-run-if-empty chmod 444 || exit
