@@ -29,7 +29,6 @@ require_once('Mail/mime.php');
 require_once('json_error_to_string.php');
 
 require_once('submit-results_contact_info.php');
-//##### eventually just put the addresses in this file
 
 require_once('utime.php');
 
@@ -127,9 +126,7 @@ try
 //------------------------------------------------------------------------------
 
 
-//##### remove this later:
-//#####$id         = time();
-$id         = utime();
+$id         = utime(); // microsecond resolution
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $host_name  = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -252,7 +249,10 @@ $mime->setTxtBody($body_text);
 
 $attachment_name = 'iqatest_results_' . $id . '.php.gz';
 
-$mime->addAttachment($results_exported_file_name, 'application/x-gzip', $attachment_name);
+$mime->addAttachment(
+	$results_exported_file_name,
+	'application/x-gzip',
+	$attachment_name);
 
 // get() must be called before headers()
 $body = $mime->get();
