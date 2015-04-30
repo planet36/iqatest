@@ -221,8 +221,18 @@ EOT
 
 	if ${OPTIPNG_EXISTS}
 	then
-		# Optimize the png image.
-		optipng ${VERBOSE_STRING} -o 2 -fix -preserve -quiet -i 0 -- "${IMAGE_SET}/reference.png" || exit
+		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
+
+		if ${VERBOSE}
+		then
+			# Optimize the png image.
+			optipng ${VERBOSE_STRING} -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/reference.png" || exit
+		else
+			# Optimize the png image.
+			optipng -quiet            -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/reference.png" || exit
+		fi
+
+		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
 	fi
 
 	# Preserve the timestamp.
@@ -242,8 +252,18 @@ EOT
 
 	if ${OPTIPNG_EXISTS}
 	then
-		# Optimize the png image.
-		optipng ${VERBOSE_STRING} -o 2 -fix -preserve -quiet -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
+		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
+
+		if ${VERBOSE}
+		then
+			# Optimize the png image.
+			optipng ${VERBOSE_STRING} -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
+		else
+			# Optimize the png image.
+			optipng -quiet            -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
+		fi
+
+		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
 	fi
 
 	#---------------------------------------------------------------------------
