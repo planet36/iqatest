@@ -114,7 +114,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <!--
-##### html5 <form> can't have an empty action string
+NOTE: html5 <form> can't have an empty action string
 <form id="form_participant_information" style="display: none;" action="">
 -->
 <form id="form_participant_information" style="display: none;">
@@ -494,7 +494,7 @@ Continue making comparisons until your results are submitted.  When your results
 
 <tr>
 	<!--
-	##### html5 <img> can't have an empty src string
+	NOTE: html5 <img> can't have an empty src string
 	<td><img id="img_A" src="" alt="image A" /></td>
 	<td><img id="img_B" src="" alt="image B" /></td>
 	-->
