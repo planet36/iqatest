@@ -223,12 +223,11 @@ EOT
 	then
 		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
 
+		# Optimize the png image.
 		if ${VERBOSE}
 		then
-			# Optimize the png image.
 			optipng ${VERBOSE_STRING} -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/reference.png" || exit
 		else
-			# Optimize the png image.
 			optipng -quiet            -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/reference.png" || exit
 		fi
 
@@ -254,12 +253,11 @@ EOT
 	then
 		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
 
+		# Optimize the png image.
 		if ${VERBOSE}
 		then
-			# Optimize the png image.
 			optipng ${VERBOSE_STRING} -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
 		else
-			# Optimize the png image.
 			optipng -quiet            -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
 		fi
 
