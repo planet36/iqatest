@@ -540,6 +540,14 @@ image set <output id="image_set_progress"></output>
 
 <hr />
 
+<button type="button" onclick="javascript:result = parseInt(prompt_return_default_if_cancel('iqatest.interstimulus_interval', iqatest.interstimulus_interval), 10);if (!isNaN(result)){iqatest.interstimulus_interval = result;}">Set iqatest.interstimulus_interval (ms)</button>
+<button type="button" onclick="javascript:result = parseInt(prompt_return_default_if_cancel('iqatest.button_disable_period', iqatest.button_disable_period), 10);if (!isNaN(result)){iqatest.button_disable_period = result;}">Set iqatest.button_disable_period (ms)</button>
+
+<hr />
+
+<button type="button" onclick="javascript:result = parseInt(prompt_return_default_if_cancel('iqatest.current_image_set', iqatest.current_image_set), 10);if (!isNaN(result)){iqatest.current_image_set = result;}">Set iqatest.current_image_set</button>
+<button type="button" onclick="javascript:result = parseInt(prompt_return_default_if_cancel('iqatest.current_image', iqatest.current_image), 10);if (!isNaN(result)){iqatest.current_image = result;}">Set iqatest.current_image</button>
+<button type="button" onclick="javascript:result = parseInt(prompt_return_default_if_cancel('iqatest.image_comparisons_done', iqatest.image_comparisons_done), 10);if (!isNaN(result)){iqatest.image_comparisons_done = result;}">Set iqatest.image_comparisons_done</button>
 
 <hr />
 
