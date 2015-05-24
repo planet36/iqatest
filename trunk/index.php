@@ -309,8 +309,8 @@ NOTE: html5 <form> can't have an empty action string
 </tr>
 
 <tr>
-	<td><img alt="image A" src="images/practice_set/distorted_severe.jpg" /></td>
-	<td><img alt="image B" src="images/practice_set/reference.png"        /></td>
+	<td><img alt="image A" src="images/practice-set/distorted_severe.jpg" /></td>
+	<td><img alt="image B" src="images/practice-set/reference.png"        /></td>
 </tr>
 
 <tr>
@@ -350,8 +350,8 @@ NOTE: html5 <form> can't have an empty action string
 </tr>
 
 <tr>
-	<td><img alt="image A" src="images/practice_set/reference.png" /></td>
-	<td><img alt="image B" src="images/practice_set/reference.png" /></td>
+	<td><img alt="image A" src="images/practice-set/reference.png" /></td>
+	<td><img alt="image B" src="images/practice-set/reference.png" /></td>
 </tr>
 
 <tr>
@@ -391,8 +391,8 @@ NOTE: html5 <form> can't have an empty action string
 </tr>
 
 <tr>
-	<td><img alt="image A" src="images/practice_set/reference.png"        /></td>
-	<td><img alt="image B" src="images/practice_set/distorted_subtle.jpg" /></td>
+	<td><img alt="image A" src="images/practice-set/reference.png"        /></td>
+	<td><img alt="image B" src="images/practice-set/distorted_subtle.jpg" /></td>
 </tr>
 
 <tr>
@@ -432,8 +432,8 @@ NOTE: html5 <form> can't have an empty action string
 </tr>
 
 <tr>
-	<td><img alt="image A" src="images/practice_set/anti-reference.png" /></td>
-	<td><img alt="image B" src="images/practice_set/reference.png"      /></td>
+	<td><img alt="image A" src="images/practice-set/anti-reference.png" /></td>
+	<td><img alt="image B" src="images/practice-set/reference.png"      /></td>
 </tr>
 
 <tr>
