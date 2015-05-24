@@ -127,7 +127,7 @@ NOTE: html5 <form> can't have an empty action string
 
 <li>
 	Age:
-	<input id="age" name="age" type="text" value="" size="3" />
+	<input id="age" type="text" value="" size="3" />
 	(years)
 </li>
 
@@ -171,13 +171,13 @@ NOTE: html5 <form> can't have an empty action string
 
 <li>
 	How many hours did you sleep in the last 24 hours?
-	<input id="sleep_time" name="sleep_time" type="text" value="" size="2" />
+	<input id="sleep_time" type="text" value="" size="2" />
 	(hours)
 </li>
 
 <li>
 	How many hours per week (on average) do you spend using a <strong>computer</strong>?
-	<input id="computer_time" name="computer_time" type="text" value="" size="3" />
+	<input id="computer_time" type="text" value="" size="3" />
 	(hours/week)
 </li>
 
@@ -194,7 +194,7 @@ NOTE: html5 <form> can't have an empty action string
 
 <li>
 	How many hours per week (on average) do you spend playing (computer or console) <strong>video games</strong>?
-	<input id="videogame_time" name="videogame_time" type="text" value="" size="3" />
+	<input id="videogame_time" type="text" value="" size="3" />
 	(hours/week)
 </li>
 
@@ -217,7 +217,7 @@ NOTE: html5 <form> can't have an empty action string
 	<ul id="optional_substance_influence" style="display: none;">
 	<li>
 		What substances?
-		<input id="substances" name="substances" type="text" value="" />
+		<input id="substances" type="text" value="" />
 	</li>
 	</ul>
 </li>
@@ -225,19 +225,19 @@ NOTE: html5 <form> can't have an empty action string
 <li>
 	What is the highest level of school you completed or the highest degree you received?
 	<select id="education" size="1">
-		<option selected="selected"></option>
-		<option>Less than 9th grade</option>
-		<option>9th grade</option>
-		<option>10th grade</option>
-		<option>11th grade</option>
-		<option>12th grade (but no diploma)</option>
-		<option>High school diploma or the equivalent (e.g., GED)</option>
-		<option>Some college (but no degree)</option>
-		<option>Associate's degree (e.g., AA, AS)</option>
-		<option>Bachelor's degree (e.g., BA, BS)</option>
-		<option>Master's degree (e.g., MA, MS, MBA, MEd, MSW)</option>
-		<option>Professional Doctoral degree (e.g., MD, JD, DDS)</option>
-		<option>Research Doctoral degree (e.g., PhD, EdD)</option>
+		<option value="" selected>No answer</option>
+		<option value="1">Less than 9th grade</option>
+		<option value="2">9th grade</option>
+		<option value="3">10th grade</option>
+		<option value="4">11th grade</option>
+		<option value="5">12th grade (but no diploma)</option>
+		<option value="6">High school diploma or the equivalent (e.g., GED)</option>
+		<option value="7">Some college (but no degree)</option>
+		<option value="8">Associate's degree (e.g., AA, AS)</option>
+		<option value="9">Bachelor's degree (e.g., BA, BS)</option>
+		<option value="10">Master's degree (e.g., MA, MS, MBA, MEd, MSW)</option>
+		<option value="11">Professional Doctoral degree (e.g., MD, JD, DDS)</option>
+		<option value="12">Research Doctoral degree (e.g., PhD, EdD)</option>
 	</select>
 </li>
 
@@ -341,8 +341,6 @@ Continue making comparisons until your results are submitted.  When your results
 
 <p>These images are <em>identical</em>.</p>
 
-<!--<p>There is a 25% chance that both images will be identical.</p>-->
-
 <p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
 
 <table class="centered">
@@ -426,8 +424,6 @@ Continue making comparisons until your results are submitted.  When your results
 <h2>Practice Image Comparison</h2>
 
 <p>These images are <em>wholly different</em>.</p>
-
-<!--<p>There is a 25% chance that both images will be wholly different.</p>-->
 
 <p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
 
