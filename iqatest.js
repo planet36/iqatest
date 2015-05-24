@@ -145,13 +145,13 @@ iqatest.current_image_set = 0;
 iqatest.current_image = 0;
 
 
-iqatest.total_image_comparisons = 0;
-iqatest.current_image_comparison = 0;
+iqatest.max_image_comparisons = 0;
+iqatest.image_comparisons_done = 0;
 
 
 for (var i = 0; i < iqatest.results.image_indexes.length; ++i)
 {
-	iqatest.total_image_comparisons += iqatest.results.image_indexes[i].length;
+	iqatest.max_image_comparisons += iqatest.results.image_indexes[i].length;
 }
 
 
@@ -291,13 +291,13 @@ iqatest.update_progress = function()
 
 	//--------------------------------------------------------------------------
 
-	++iqatest.current_image_comparison;
-
-	var percent_complete = Math.round(iqatest.current_image_comparison / iqatest.total_image_comparisons * 100.0) + "%";
+	var percent_complete = Math.round(iqatest.image_comparisons_done / iqatest.max_image_comparisons * 100.0) + "%";
 
 	id("div_progress").innerHTML = percent_complete;
 
 	set_element_style_property("div_progress", "width", percent_complete);
+
+	++iqatest.image_comparisons_done;
 };
 
 
