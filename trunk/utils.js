@@ -263,7 +263,7 @@ function transition_from_to_timeout(from_element, to_element, delay)
 	scrollTo(0, 0)
 
 	// Make the second element displayed after the delay.
-	setTimeout("reset_element_style_display('" + to_element + "');", delay)
+	setTimeout("reset_element_style_display('" + to_element + "')", delay)
 }
 
 
@@ -308,6 +308,7 @@ function string_repeat(string, num)
 function array_sum(arr)
 {
 	// The Array.reduce method is only available in Firefox 3+.
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
 
 	var sum = 0
 
@@ -486,3 +487,20 @@ function get_radio_button_value(radio_button_group_name)
 
 
 //------------------------------------------------------------------------------
+
+
+// Return the result of a prompt.  If "Cancel" was chosen, the given default value is returned.
+/**
+\sa https://developer.mozilla.org/en-US/docs/Web/API/Window/prompt
+*/
+function prompt_return_default_if_cancel(message, default_value)
+{
+	var result = window.prompt(message, default_value)
+
+	if (!result)
+	{
+		result = default_value
+	}
+
+	return result
+}
