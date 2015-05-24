@@ -551,6 +551,8 @@ iqatest.results.participant_information.store = function()
 
 	iqatest.results.participant_information.substances = form.substances.value;
 
+	iqatest.results.participant_information.education = form.education.value;
+
 	//--------------------------------------------------------------------------
 
 	return true;
