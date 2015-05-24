@@ -32,8 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 
-<script type="text/javascript" src="json2.js"></script>
-
 <script type="text/javascript" src="utils.js"></script>
 
 <script type="text/javascript" src="iqatest.js"></script>
