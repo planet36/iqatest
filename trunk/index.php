@@ -535,8 +535,8 @@ NOTE: html5 <form> can't have an empty action string
 
 <hr />
 
-image <span id="image_progress"></span><br />
-image set <span id="image_set_progress"></span>
+image <output id="image_progress"></output><br />
+image set <output id="image_set_progress"></output>
 
 <hr />
 
