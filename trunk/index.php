@@ -540,33 +540,10 @@ image set <span id="image_set_progress"></span>
 
 <hr />
 
+
+<hr />
+
 <button type="button" onclick="javascript:alert(window.id('div_images').innerHTML);">window.id('div_images').innerHTML</button>
-
-<hr />
-
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results));">JSON.stringify(iqatest.results)</button>
-
-<hr />
-
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.screen_properties));">JSON.stringify(iqatest.results.screen_properties)</button>
-
-<hr />
-
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.participant_information));">JSON.stringify(iqatest.results.participant_information)</button>
-
-<hr />
-
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.image_sets));">JSON.stringify(iqatest.results.image_sets)</button>
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.image_set_indexes));">JSON.stringify(iqatest.results.image_set_indexes)</button>
-
-<hr />
-
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.images));">JSON.stringify(iqatest.results.images)</button>
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.image_indexes));">JSON.stringify(iqatest.results.image_indexes)</button>
-
-<hr />
-
-<button type="button" onclick="javascript:alert(JSON.stringify(iqatest.results.image_comparisons));">JSON.stringify(iqatest.results.image_comparisons)</button>
 
 <hr />
 
@@ -576,14 +553,20 @@ image set <span id="image_set_progress"></span>
 <hr />
 
 <button type="button" onclick="javascript:iqatest.results.image_comparisons.fill_zero();">iqatest.results.image_comparisons.fill_zero();</button>
-
-<br />
-
 <button type="button" onclick="javascript:iqatest.results.image_comparisons.fill_one();">iqatest.results.image_comparisons.fill_one();</button>
+<button type="button" onclick="javascript:iqatest.results.image_comparisons.fill_random();">iqatest.results.image_comparisons.fill_random();</button>
+
+<hr />
+
+<form style="border: medium dotted yellow;">
+
+<button type="button" onclick="javascript:json_stringify_iqatest.value=JSON.stringify(iqatest, null, '\t');">JSON.stringify(iqatest)</button>
 
 <br />
 
-<button type="button" onclick="javascript:iqatest.results.image_comparisons.fill_random();">iqatest.results.image_comparisons.fill_random();</button>
+<output style="white-space: pre; font-family: monospace;" name="json_stringify_iqatest"></output>
+
+</form>
 
 <hr />
 
