@@ -2,7 +2,7 @@
 /*
 
 Image Quality Assessment Test
-Copyright (C) 2013 Steve Ward
+Copyright (C) 2015 Steve Ward
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
