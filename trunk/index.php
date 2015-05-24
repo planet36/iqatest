@@ -273,14 +273,16 @@ NOTE: html5 <form> can't have an empty action string
 
 <p>No feedback will be given after you make your comparisons.</p>
 
-<p>After a comparison is made, there is a small period of time in which
+<p>After a comparison is made, there is a small period of time in which:</p>
+
 <ol>
 <li>the pair of images will disappear,</li>
 <li>the buttons will be disabled,</li>
 <li>a new pair of images will appear,</li>
 <li>and the buttons will be enabled.</li>
 </ol>
-Continue making comparisons until your results are submitted.  When your results are submitted, you will be redirected to another page.</p>
+
+<p>Continue making comparisons until your results are submitted.  When your results are submitted, you will be redirected to another page.</p>
 
 <button type="button" onclick="javascript:transition_from_to_timeout('div_instructions_first', 'div_practice_image_comparison_1', iqatest.interstimulus_interval);">Begin practice image comparison</button>
 
@@ -296,9 +298,7 @@ Continue making comparisons until your results are submitted.  When your results
 
 <h2>Practice Image Comparison</h2>
 
-<p>These images are <em>different</em>.  One of them has a severe distortion.</p>
-
-<p>Severe distortions are noticeable by their blockiness.  A distorted image may appear on either the left side or the right side.</p>
+<p>These images are <em>different</em>.  One of them has a severe distortion.  Severe distortions are noticeable by their blockiness.  A distorted image may appear on either the left side or the right side.</p>
 
 <p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
 
@@ -380,9 +380,7 @@ Continue making comparisons until your results are submitted.  When your results
 
 <h2>Practice Image Comparison</h2>
 
-<p>These images are <em>slightly different</em>.  One of them has a subtle distortion.</p>
-
-<p>Subtle distortions are most noticeable in gradients and around edges.</p>
+<p>These images are <em>slightly different</em>.  One of them has a subtle distortion.  Subtle distortions are most noticeable in gradients and around edges.</p>
 
 <p>These messages will not be shown during the actual experiment.  They are only instructional.</p>
 
@@ -402,7 +400,7 @@ Continue making comparisons until your results are submitted.  When your results
 </tr>
 
 <tr>
-	<td colspan="2"><button type="button" onclick="javascript:transition_from_to('div_practice_image_comparison_3', 'div_practice_image_comparison_4');">Different</button></td>
+	<td colspan="2"><button type="button" onclick="javascript:transition_from_to_timeout('div_practice_image_comparison_3', 'div_practice_image_comparison_4', iqatest.interstimulus_interval);">Different</button></td>
 </tr>
 
 </table>
@@ -470,7 +468,7 @@ Continue making comparisons until your results are submitted.  When your results
 
 <p>There is no time limit.  However, it is recommended that you don't spend too much time comparing each pair of images.</p>
 
-<button type="button" onclick="javascript:transition_from_to('div_instructions_last', 'div_image_comparison');">Begin image comparison</button>
+<button type="button" onclick="javascript:transition_from_to_timeout('div_instructions_last', 'div_image_comparison', iqatest.interstimulus_interval);">Begin image comparison</button>
 
 </div>
 
@@ -533,7 +531,7 @@ Continue making comparisons until your results are submitted.  When your results
 -->
 
 
-<div id="div_debug" class="centered" style="display: none; border: medium dotted blue;">
+<div id="div_debug" style="display: none; border: medium dotted blue;">
 
 <h2>Debug</h2>
 
@@ -604,7 +602,7 @@ image set <span id="image_set_progress"></span>
 -->
 
 
-<form id="form_results" class="centered" style="display: none; border: medium dotted red;" action="submit-results.php" method="post" onsubmit="javascript:return iqatest.encode_results();">
+<form id="form_results" style="display: none; border: medium dotted red;" action="submit-results.php" method="post" onsubmit="javascript:return iqatest.encode_results();">
 
 <h2>Submit Results</h2>
 
