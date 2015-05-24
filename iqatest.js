@@ -280,22 +280,23 @@ iqatest.get_current_distorted_image = function()
 iqatest.update_progress = function()
 {
 	// update the image progress
-	id("image_progress").innerHTML = (iqatest.current_image + 1) + " of " + iqatest.get_current_image_indexes().length;
+	id("image_progress").value = (iqatest.current_image + 1) + " of " + iqatest.get_current_image_indexes().length;
 
 	// if the set changed
 	if (iqatest.current_image === 0)
 	{
 		// update the image set progress
-		id("image_set_progress").innerHTML = (iqatest.current_image_set + 1) + " of " + iqatest.results.image_set_indexes.length;
+		id("image_set_progress").value = (iqatest.current_image_set + 1) + " of " + iqatest.results.image_set_indexes.length;
 	}
 
 	//--------------------------------------------------------------------------
 
-	var percent_complete = Math.round(iqatest.image_comparisons_done / iqatest.max_image_comparisons * 100.0) + "%";
+	var percent_complete = iqatest.image_comparisons_done / iqatest.max_image_comparisons * 100.0;
 
-	id("div_progress").innerHTML = percent_complete;
+	id("div_progress").innerHTML = Math.round(percent_complete) + "%";
 
-	set_element_style_property("div_progress", "width", percent_complete);
+	// Setting the width too small makes the text go outside the block.
+	set_element_style_property("div_progress", "width", Math.max(percent_complete, 3) + "%");
 
 	++iqatest.image_comparisons_done;
 };
