@@ -24,10 +24,8 @@ printf "#DIRS=${#DIRS[@]}\n"
 
 for DIR in "${DIRS[@]}"
 do
-	#[[ ! -f "${DIR}/index.html" ]] && { cp --verbose --preserve=timestamps index.html.template "${DIR}/index.html" || exit 1 ; }
 	if [[ ! -f "${DIR}/index.html" || index.html.template -nt "${DIR}/index.html" ]]
 	then
-		#cp --verbose --preserve=timestamps index.html.template "${DIR}/index.html" || exit
 		cp --verbose --preserve index.html.template "${DIR}/index.html" || exit
 	fi
 done
