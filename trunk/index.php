@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">-->
 
 <!--
 
@@ -21,20 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <html lang="en">
-<!--<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">-->
 
 <head>
 
 <meta charset="utf-8">
-<!--<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />-->
 
 <title>Image Quality Assessment Test</title>
 
-<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+<link rel="stylesheet" href="style.css" media="screen" />
 
-<script type="text/javascript" src="utils.js"></script>
+<script src="utils.js"></script>
 
-<script type="text/javascript" src="iqatest.js"></script>
+<script src="iqatest.js"></script>
 
 </head>
 
