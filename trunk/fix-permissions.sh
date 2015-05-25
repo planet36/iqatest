@@ -31,4 +31,4 @@ find ./results    ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty ch
 find ./images/src ${VCS_REPOS_PRUNE} -print0 | xargs --null --no-run-if-empty chmod go-rwx || exit
 
 find ${VCS_REPOS_PRUNE} -type f -name '*.sh'       -print0 | xargs --null --no-run-if-empty chmod 700 || exit
-find ${VCS_REPOS_PRUNE} -type f -name 'index.html' -print0 | xargs --null --no-run-if-empty chmod 444 || exit
+find ${VCS_REPOS_PRUNE} -type f -name 'index.html' -print0 | xargs --null --no-run-if-empty chmod 644 || exit
