@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2013 Steve Ward
+# Copyright (C) 2015 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,8 +50,8 @@ function program_exists
 function print_version
 {
 	cat <<EOT
-${SCRIPT_NAME} 2013-02-26
-Copyright (C) 2013 Steve Ward
+${SCRIPT_NAME} 2015-05-24
+Copyright (C) 2015 Steve Ward
 EOT
 }
 
@@ -162,6 +162,14 @@ then
 fi
 
 
+if ${VERBOSE}
+then
+	OPTIPNG_OPTIONS="${VERBOSE_STRING} -o 2 -fix -preserve -i 0"
+else
+	OPTIPNG_OPTIONS="-quiet            -o 2 -fix -preserve -i 0"
+fi
+
+
 #-------------------------------------------------------------------------------
 
 
@@ -209,7 +217,7 @@ do
 	# Note: Do not use the '-verbose' option for 'convert' because too much is printed.
 
 	# http://www.imagemagick.org/script/command-line-options.php#colorspace
-	convert "${ORIGINAL_IMAGE}" -set colorspace RGB -colorspace Rec709Luma -resize "${SIZE_X}x${SIZE_Y}" "${IMAGE_SET}/reference.png" || exit
+	convert "${ORIGINAL_IMAGE}" -colorspace Rec709Luma -resize "${SIZE_X}x${SIZE_Y}" "${IMAGE_SET}/reference.png" || exit
 :<<'EOT'
 There is a bug in ImageMagick 6.7.7+.
 
@@ -224,12 +232,7 @@ EOT
 		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
 
 		# Optimize the png image.
-		if ${VERBOSE}
-		then
-			optipng ${VERBOSE_STRING} -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/reference.png" || exit
-		else
-			optipng -quiet            -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/reference.png" || exit
-		fi
+		optipng ${OPTIPNG_OPTIONS} -- "${IMAGE_SET}/reference.png" || exit
 
 		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
 	fi
@@ -254,12 +257,7 @@ EOT
 		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
 
 		# Optimize the png image.
-		if ${VERBOSE}
-		then
-			optipng ${VERBOSE_STRING} -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
-		else
-			optipng -quiet            -o 2 -fix -preserve -i 0 -- "${IMAGE_SET}/anti-reference.png" || exit
-		fi
+		optipng ${OPTIPNG_OPTIONS} -- "${IMAGE_SET}/anti-reference.png" || exit
 
 		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
 	fi
