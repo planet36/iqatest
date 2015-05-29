@@ -118,7 +118,7 @@ declare -r REFERENCE_IMAGE="${1}"
 
 if [[ ! -f "${REFERENCE_IMAGE}" ]]
 then
-	print_error "File '${REFERENCE_IMAGE}' does not exist."
+	print_error "File %q does not exist." "${REFERENCE_IMAGE}"
 fi
 
 
@@ -182,7 +182,7 @@ do
 
 	if [[ ! -f "${DISTORTED_IMAGE}" ]]
 	then
-		print_error "Distorted image '${DISTORTED_IMAGE}' does not exist."
+		print_error "Distorted image %q does not exist." "${DISTORTED_IMAGE}"
 	fi
 
 	# Append distorted image basename.
