@@ -32,9 +32,6 @@ declare -i SIZE_X=384
 declare -i SIZE_Y=384
 
 
-OPTIPNG_EXISTS=false
-
-
 #-------------------------------------------------------------------------------
 
 
@@ -50,7 +47,7 @@ function program_exists
 function print_version
 {
 	cat <<EOT
-${SCRIPT_NAME} 2015-05-24
+${SCRIPT_NAME} 2015-05-25
 Copyright (C) 2015 Steve Ward
 EOT
 }
@@ -156,23 +153,6 @@ fi
 #-------------------------------------------------------------------------------
 
 
-if program_exists optipng
-then
-	OPTIPNG_EXISTS=true
-fi
-
-
-if ${VERBOSE}
-then
-	OPTIPNG_OPTIONS="${VERBOSE_STRING} -o 2 -fix -preserve -i 0"
-else
-	OPTIPNG_OPTIONS="-quiet            -o 2 -fix -preserve -i 0"
-fi
-
-
-#-------------------------------------------------------------------------------
-
-
 for ORIGINAL_IMAGE in "$@"
 do
 	print_verbose ""
@@ -183,7 +163,7 @@ do
 
 	if [[ ! -f "${ORIGINAL_IMAGE}" ]]
 	then
-		print_error "File '${ORIGINAL_IMAGE}' does not exist."
+		print_error "File %q does not exist." "${ORIGINAL_IMAGE}"
 	fi
 
 	#---------------------------------------------------------------------------
@@ -193,17 +173,17 @@ do
 
 	if [[ -f "${IMAGE_SET}" ]]
 	then
-		print_error "File ${IMAGE_SET} already exists."
+		print_error "File %q already exists." "${IMAGE_SET}"
 	fi
 
 	if [[ -d "${IMAGE_SET}" ]]
 	then
-		print_error "Directory ${IMAGE_SET} already exists."
+		print_error "Directory %q already exists." "${IMAGE_SET}"
 	fi
 
 	if [[ -e "${IMAGE_SET}" ]]
 	then
-		print_error "Image set ${IMAGE_SET} already exists."
+		print_error "Image set %q already exists." "${IMAGE_SET}"
 	fi
 
 	#---------------------------------------------------------------------------
@@ -227,16 +207,6 @@ EOT
 	# http://www.graphicsmagick.org/GraphicsMagick.html#details-colorspace
 	#gm convert "${ORIGINAL_IMAGE}" -colorspace Rec709Luma -resize "${SIZE_X}x${SIZE_Y}" "${IMAGE_SET}/reference.png" || exit
 
-	if ${OPTIPNG_EXISTS}
-	then
-		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
-
-		# Optimize the png image.
-		optipng ${OPTIPNG_OPTIONS} -- "${IMAGE_SET}/reference.png" || exit
-
-		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/reference.png")"
-	fi
-
 	# Preserve the timestamp.
 	touch --reference "${ORIGINAL_IMAGE}" -- "${IMAGE_SET}/reference.png" || exit
 
@@ -251,16 +221,6 @@ EOT
 	convert -size "${GEOMETRY}" pattern:gray50 "${IMAGE_SET}/anti-reference.png" || exit
 	# http://www.graphicsmagick.org/formats.html
 	#gm convert -size "${GEOMETRY}" pattern:gray50 "${IMAGE_SET}/anti-reference.png" || exit
-
-	if ${OPTIPNG_EXISTS}
-	then
-		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
-
-		# Optimize the png image.
-		optipng ${OPTIPNG_OPTIONS} -- "${IMAGE_SET}/anti-reference.png" || exit
-
-		print_verbose "$(stat --printf '%N\t%s B\n' -- "${IMAGE_SET}/anti-reference.png")"
-	fi
 
 	#---------------------------------------------------------------------------
 
