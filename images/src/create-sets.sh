@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2013 Steve Ward
+# Copyright (C) 2015 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,8 +38,8 @@ source distortions.sh || exit
 function print_version
 {
 	cat <<EOT
-${SCRIPT_NAME} 2013-02-04
-Copyright (C) 2013 Steve Ward
+${SCRIPT_NAME} 2015-05-25
+Copyright (C) 2015 Steve Ward
 EOT
 }
 
@@ -146,7 +146,7 @@ do
 
 	if [[ ! -d "${IMAGE_SET}" ]]
 	then
-		print_error "IMAGE_SET (${IMAGE_SET}) does not exist."
+		print_error "Image set %q does not exist." "${IMAGE_SET}"
 	fi
 
 

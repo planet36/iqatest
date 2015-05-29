@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Image Quality Assessment Test
-# Copyright (C) 2013 Steve Ward
+# Copyright (C) 2015 Steve Ward
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@ source distortions.sh || exit
 function print_version
 {
 	cat <<EOT
-${SCRIPT_NAME} 2013-02-04
-Copyright (C) 2013 Steve Ward
+${SCRIPT_NAME} 2015-05-25
+Copyright (C) 2015 Steve Ward
 EOT
 }
 
@@ -210,7 +210,7 @@ do
 
 	if [[ ! -f "${REFERENCE_IMAGE}" ]]
 	then
-		print_error "File '${REFERENCE_IMAGE}' does not exist."
+		print_error "File %q does not exist." "${REFERENCE_IMAGE}"
 	fi
 
 	#---------------------------------------------------------------------------
@@ -223,10 +223,10 @@ do
 	# Note: Do not use '-verbose' option for 'convert' because too much is printed.
 
 	# http://www.imagemagick.org/script/convert.php
-	COMMAND="convert ${REFERENCE_IMAGE}"
+	CONVERT="convert ${REFERENCE_IMAGE}"
 	# http://www.graphicsmagick.org/convert.html
-	#COMMAND="gm convert ${REFERENCE_IMAGE}"
-	print_verbose "COMMAND=${COMMAND}"
+	#CONVERT="gm convert ${REFERENCE_IMAGE}"
+	print_verbose "CONVERT=${CONVERT}"
 
 	# This is necessary for the scale distortion.
 
@@ -263,9 +263,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.jpg"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -283,9 +282,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} "${VARIABLE}%" -${DISTORTION} "${GEOMETRY}!" "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} "${VARIABLE}%" -${DISTORTION} "${GEOMETRY}!" "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -303,9 +301,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -323,9 +320,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -343,9 +339,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -363,9 +358,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} "0x${VARIABLE}" "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -383,9 +377,8 @@ do
 				DISTORTED_IMAGE="${IMAGE_SET}/${DISTORTED_IMAGE_PREFIX}_${DISTORTION}_${VARIABLE}.${DISTORTED_IMAGE_SUFFIX}"
 				print_verbose "DISTORTED_IMAGE=${DISTORTED_IMAGE}"
 
-				${COMMAND} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit
+				${CONVERT} -${DISTORTION} ${VARIABLE} "${DISTORTED_IMAGE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -405,7 +398,6 @@ do
 
 				add_salt_pepper_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -425,7 +417,6 @@ do
 
 				add_gaussian_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
@@ -445,14 +436,13 @@ do
 
 				add_gaussian_noise "${REFERENCE_IMAGE}" "${DISTORTED_IMAGE}" "${VARIABLE}" || exit
 				((COUNT++))
-
 			done
 		;;
 
 		#-----------------------------------------------------------------------
 
 		*)
-			print_error "Unknown distortion (${DISTORTION})."
+			print_error "Unknown distortion: ${DISTORTION}"
 		;;
 
 		#-----------------------------------------------------------------------
