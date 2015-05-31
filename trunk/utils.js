@@ -263,7 +263,7 @@ function transition_from_to_timeout(from_element, to_element, delay)
 	scrollTo(0, 0)
 
 	// Make the second element displayed after the delay.
-	setTimeout("reset_element_style_display('" + to_element + "')", delay)
+	setTimeout(reset_element_style_display, delay, to_element)
 }
 
 
@@ -287,6 +287,9 @@ function get_current_time()
 // Repeat a string a number of times.
 function string_repeat(string, num)
 {
+	// TODO: in the future, use String.prototype.repeat
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat
+
 	return Array(num + 1).join(string)
 	/*
 	var result = ""
@@ -437,8 +440,9 @@ function array_shuffle(arr)
 			continue
 		}
 
-		// parallel assignment is only available in Firefox 2+
+		// parallel (destructuring) assignment is only available in Firefox 2+
 		// [arr[i], arr[j]] = [arr[j], arr[i]]
+		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 
 		// swap
 		var tmp = arr[i]
