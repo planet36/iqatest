@@ -146,7 +146,7 @@ iqatest.current_image = 0;
 
 
 iqatest.max_image_comparisons = 0;
-iqatest.image_comparisons_done = 0;
+iqatest.image_comparisons_done = -1; // this is incremented when initialize() is called (before the first comparison is made)
 
 
 for (var i = 0; i < iqatest.results.image_indexes.length; ++i)
@@ -277,8 +277,13 @@ iqatest.get_current_distorted_image = function()
 
 
 // update the progress
+// this is called from initialize() and process()
 iqatest.update_progress = function()
 {
+	++iqatest.image_comparisons_done;
+
+	// update the debug <output> tags
+
 	// update the image progress
 	id("image_progress").value = (iqatest.current_image + 1) + " of " + iqatest.get_current_image_indexes().length;
 
@@ -289,16 +294,20 @@ iqatest.update_progress = function()
 		id("image_set_progress").value = (iqatest.current_image_set + 1) + " of " + iqatest.results.image_set_indexes.length;
 	}
 
-	//--------------------------------------------------------------------------
+	id("image_comparisons_done").value = iqatest.image_comparisons_done;
 
 	var percent_complete = iqatest.image_comparisons_done / iqatest.max_image_comparisons * 100.0;
 
-	id("div_progress").innerHTML = Math.round(percent_complete) + "%";
+	id("percent_complete").value = percent_complete + "%";
+
+	//--------------------------------------------------------------------------
+
+	// update the progress bar
 
 	// Setting the width too small makes the text go outside the block.
 	set_element_style_property("div_progress", "width", Math.max(percent_complete, 3) + "%");
 
-	++iqatest.image_comparisons_done;
+	id("div_progress").innerHTML = Math.round(percent_complete) + "%";
 };
 
 
@@ -703,10 +712,10 @@ iqatest.results.image_comparisons.process = function(bool_choice)
 	//--------------------------------------------------------------------------
 
 	// make the two images visible
-	var image_timeout_id = setTimeout("iqatest.make_images_visible();", iqatest.interstimulus_interval);
+	var image_timeout_id = setTimeout(iqatest.make_images_visible, iqatest.interstimulus_interval);
 
 	// make the two buttons visible
-	var button_timeout_id = setTimeout("iqatest.make_buttons_enabled();", iqatest.interstimulus_interval + iqatest.button_disable_period);
+	var button_timeout_id = setTimeout(iqatest.make_buttons_enabled, iqatest.interstimulus_interval + iqatest.button_disable_period);
 
 	//--------------------------------------------------------------------------
 
@@ -746,6 +755,9 @@ iqatest.results.image_comparisons.process = function(bool_choice)
 // this is used for debugging only
 iqatest.results.image_comparisons.fill_zero = function()
 {
+	// TODO: in the future, use Array.prototype.fill()
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill
+
 	for (var i = 0; i < iqatest.results.image_comparisons.length; ++i)
 	{
 		for (var j = 0; j < iqatest.results.image_comparisons[i].length; ++j)
@@ -764,9 +776,11 @@ iqatest.results.image_comparisons.fill_zero = function()
 // this is used for debugging only
 iqatest.results.image_comparisons.fill_one = function()
 {
-	// initialize
+	// initialize the image comparisons
 	iqatest.results.image_comparisons.fill_zero();
 
+	// these loops are different than the ones in fill_zero() because the
+	// anti-reference and reference image comparisons must be handled many times
 	for (var i = 0; i < iqatest.results.image_indexes.length; ++i)
 	{
 		for (var j = 0; j < iqatest.results.image_indexes[i].length; ++j)
@@ -787,9 +801,11 @@ iqatest.results.image_comparisons.fill_one = function()
 // this is used for debugging only
 iqatest.results.image_comparisons.fill_random = function()
 {
-	// initialize
+	// initialize the image comparisons
 	iqatest.results.image_comparisons.fill_zero();
 
+	// these loops are different than the ones in fill_zero() because the
+	// anti-reference and reference image comparisons must be handled many times
 	for (var i = 0; i < iqatest.results.image_indexes.length; ++i)
 	{
 		for (var j = 0; j < iqatest.results.image_indexes[i].length; ++j)
