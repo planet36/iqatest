@@ -533,7 +533,9 @@ NOTE: html5 <form> can't have an empty action string
 <hr />
 
 image <output id="image_progress"></output><br />
-image set <output id="image_set_progress"></output>
+image set <output id="image_set_progress"></output><br />
+image comparisons done <output id="image_comparisons_done"></output><br />
+percent complete <output id="percent_complete"></output>
 
 <hr />
 
@@ -563,15 +565,8 @@ image set <output id="image_set_progress"></output>
 
 <hr />
 
-<form style="border: medium dotted yellow;">
-
-<button type="button" onclick="javascript:json_stringify_iqatest.value=JSON.stringify(iqatest, null, '\t');">JSON.stringify(iqatest)</button>
-
-<br />
-
-<output style="white-space: pre; font-family: monospace;" name="json_stringify_iqatest"></output>
-
-</form>
+<button type="button" onclick="javascript:json_stringify_iqatest.value=JSON.stringify(iqatest, null, '\t');">JSON.stringify(iqatest)</button><br />
+<output id="json_stringify_iqatest" style="white-space: pre; font-family: monospace;"></output>
 
 <hr />
 
