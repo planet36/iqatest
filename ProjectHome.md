@@ -1,0 +1,3 @@
+The purpose of this image quality assessment test is to show when the human visual system can begin to perceive distortions applied to reference images.  The specific type of distortion is JPEG compression.  Human participants of the test will evaluate pairs of images side-by-side and determine if they are identical or different.
+
+The work for this project was initially done for a graduate course (IDS 6916 Simulation Research Methods and Practicum) at the University of Central Florida in the Spring 2010 semester.
