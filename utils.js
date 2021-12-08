@@ -6,9 +6,6 @@ SPDX-License-Identifier: OSL-3.0
 
 */
 
-//------------------------------------------------------------------------------
-
-
 // Get the datum by its id.  This is a utility for "getElementById".
 function id(x)
 {
@@ -30,7 +27,6 @@ function id(x)
 		return x
 	}
 }
-
 
 // Get the daturm by its name.  This is a utility for "getElementsByName".
 function name(x)
@@ -54,10 +50,6 @@ function name(x)
 	}
 }
 
-
-//------------------------------------------------------------------------------
-
-
 function set_element_property(element, property, value)
 {
 	try
@@ -70,45 +62,30 @@ function set_element_property(element, property, value)
 	}
 }
 
-
 function reset_element_property(element, property)
 {
 	set_element_property(element, property, null)
 }
-
-
-//------------------------------------------------------------------------------
-
 
 function set_element_disabled(element, value)
 {
 	set_element_property(element, "disabled", value)
 }
 
-
 function reset_element_disabled(element)
 {
 	reset_element_property(element, "disabled")
 }
-
-
-//------------------------------------------------------------------------------
-
 
 function set_element_disabled_false(element)
 {
 	set_element_disabled(element, false)
 }
 
-
 function set_element_disabled_true(element)
 {
 	set_element_disabled(element, true)
 }
-
-
-//------------------------------------------------------------------------------
-
 
 function set_element_style_property(element, property, value)
 {
@@ -122,15 +99,10 @@ function set_element_style_property(element, property, value)
 	}
 }
 
-
 function reset_element_style_property(element, property)
 {
 	set_element_style_property(element, property, "")
 }
-
-
-//------------------------------------------------------------------------------
-
 
 function set_element_style_display(element, value)
 {
@@ -148,15 +120,10 @@ Initial: inline
 	set_element_style_property(element, "display", value)
 }
 
-
 function reset_element_style_display(element)
 {
 	reset_element_style_property(element, "display")
 }
-
-
-//------------------------------------------------------------------------------
-
 
 function set_element_style_display_block(element)
 {
@@ -178,10 +145,6 @@ function set_element_style_display_none(element)
 	set_element_style_display(element, "none")
 }
 
-
-//------------------------------------------------------------------------------
-
-
 function set_element_style_visibility(element, value)
 {
 /*
@@ -193,15 +156,10 @@ Initial: visible
 	set_element_style_property(element, "visibility", value)
 }
 
-
 function reset_element_style_visibility(element)
 {
 	reset_element_style_property(element, "visibility")
 }
-
-
-//------------------------------------------------------------------------------
-
 
 function set_element_style_visibility_visible(element)
 {
@@ -223,10 +181,6 @@ function set_element_style_visibility_inherit(element)
 	set_element_style_visibility(element, "inherit")
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Transition display from one element to another element.
 function transition_from_to(from_element, to_element)
 {
@@ -239,7 +193,6 @@ function transition_from_to(from_element, to_element)
 	// Make the second element displayed.
 	reset_element_style_display(to_element)
 }
-
 
 // Transition display from one element to another element.
 function transition_from_to_timeout(from_element, to_element, delay)
@@ -254,10 +207,6 @@ function transition_from_to_timeout(from_element, to_element, delay)
 	setTimeout(reset_element_style_display, delay, to_element)
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Get the current time.
 /*
 The current time is represented as the number of milliseconds since
@@ -267,10 +216,6 @@ function get_current_time()
 {
 	return new Date().getTime()
 }
-
-
-//------------------------------------------------------------------------------
-
 
 // Repeat a string a number of times.
 function string_repeat(string, num)
@@ -291,10 +236,6 @@ function string_repeat(string, num)
 	*/
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Get the sum of all the elements in an array.
 function array_sum(arr)
 {
@@ -311,10 +252,6 @@ function array_sum(arr)
 	return sum
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Get the average of all the elements in an array.
 function array_average(arr)
 {
@@ -326,19 +263,11 @@ function array_average(arr)
 	return array_sum(arr) / arr.length
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Get the minimum element in an array.
 function array_min(arr)
 {
 	return Math.min.apply(null, arr)
 }
-
-
-//------------------------------------------------------------------------------
-
 
 // Get the minimum element in an array.
 function array_max(arr)
@@ -346,19 +275,11 @@ function array_max(arr)
 	return Math.max.apply(null, arr)
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Get a random boolean.
 function get_random_boolean()
 {
 	return !Math.round(Math.random())
 }
-
-
-//------------------------------------------------------------------------------
-
 
 /// Get a random float in the interval [0, b).
 function get_random_float_1(b)
@@ -367,19 +288,11 @@ function get_random_float_1(b)
 	return Math.random() * b
 }
 
-
-//------------------------------------------------------------------------------
-
-
 /// Get a random int in the interval [0, b).
 function get_random_int_1(b)
 {
 	return Math.floor(get_random_float_1(b))
 }
-
-
-//------------------------------------------------------------------------------
-
 
 /// Get a random float in the interval [a, b).
 function get_random_float_2(a, b)
@@ -389,19 +302,11 @@ function get_random_float_2(a, b)
 	return Math.random() * (b - a) + a
 }
 
-
-//------------------------------------------------------------------------------
-
-
 /// Get a random int in the interval [a, b).
 function get_random_int_2(a, b)
 {
 	return Math.floor(get_random_float_2(a, b))
 }
-
-
-//------------------------------------------------------------------------------
-
 
 // Shuffle the elements in the array.
 /**
@@ -439,10 +344,6 @@ function array_shuffle(arr)
 	}
 }
 
-
-//------------------------------------------------------------------------------
-
-
 // Set all the radio button checked properties to false.
 function reset_radio_button_checked_properties(radio_button_group_name)
 {
@@ -453,10 +354,6 @@ function reset_radio_button_checked_properties(radio_button_group_name)
 		elements[i].checked = false
 	}
 }
-
-
-//------------------------------------------------------------------------------
-
 
 // Get the value of the first checked radio button.
 function get_radio_button_value(radio_button_group_name)
@@ -476,10 +373,6 @@ function get_radio_button_value(radio_button_group_name)
 
 	return result
 }
-
-
-//------------------------------------------------------------------------------
-
 
 // Return the result of a prompt.  If "Cancel" was chosen, the given default value is returned.
 /**
