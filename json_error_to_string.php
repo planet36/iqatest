@@ -19,16 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
-//------------------------------------------------------------------------------
-
-
 // constant 'JSON_ERROR_UTF8' exists in PHP 5.3.3+
 if (!defined('JSON_ERROR_UTF8'))
 {
 	define('JSON_ERROR_UTF8', 5);
 }
-
 
 // convert the json error value to a string
 /**
@@ -46,6 +41,5 @@ function json_error_to_string($error)
 	default:                   return "??? ($error) Unknown error"; break;
 	}
 }
-
 
 ?>

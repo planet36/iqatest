@@ -19,11 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
-//------------------------------------------------------------------------------
-
-
-// http://pear.php.net/package/Mail_Mime/
+// https://pear.php.net/package/Mail_Mime/
 require_once('Mail/mime.php');
 
 require_once('json_error_to_string.php');
@@ -32,14 +28,9 @@ require_once('submit-results_contact_info.php');
 
 require_once('utime.php');
 
-
-//------------------------------------------------------------------------------
-
-
 $iqatest_host_name = parse_url($_SERVER['SCRIPT_URI'], PHP_URL_HOST);
 
 $iqatest_url = 'http://' . $iqatest_host_name;
-
 
 if (!isset($_SERVER['HTTP_REFERER']))
 {
@@ -48,9 +39,7 @@ if (!isset($_SERVER['HTTP_REFERER']))
 	exit;
 }
 
-
 $referer_host_name = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
-
 
 if ($referer_host_name != $iqatest_host_name)
 {
@@ -59,17 +48,12 @@ if ($referer_host_name != $iqatest_host_name)
 	exit;
 }
 
-
 if (!array_key_exists('results', $_POST))
 {
 	// Redirect user agent to main page.
 	header('Location: ' . $iqatest_url);
 	exit;
 }
-
-
-//------------------------------------------------------------------------------
-
 
 ?>
 <!DOCTYPE html>
@@ -115,22 +99,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <?php
 
-
 try
 {
-
-
-//------------------------------------------------------------------------------
-
-
 $id         = utime(); // microsecond resolution
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $host_name  = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
-
-
-//------------------------------------------------------------------------------
-
 
 $results = json_decode(stripslashes($_POST['results']), true);
 
@@ -146,16 +120,13 @@ if (function_exists('json_last_error'))
 	}
 }
 
-
 $results['id'        ] = $id        ;
 $results['ip_address'] = $ip_address;
 $results['host_name' ] = $host_name ;
 $results['user_agent'] = $user_agent;
 
-
 $results_exported = var_export($results, true);
 // Note: not possible to check if var_export fails
-
 
 $results_exported_string = <<<EOT
 <?php
@@ -166,10 +137,6 @@ $results_exported_string = <<<EOT
 EOT
 ;
 
-
-//------------------------------------------------------------------------------
-
-
 // compress the string
 $results_exported_string_gz = gzencode($results_exported_string);
 
@@ -177,7 +144,6 @@ if ($results_exported_string_gz === false)
 {
 	throw new Exception('"gzencode" function failed.');
 }
-
 
 // create a file
 $results_exported_file_name = tempnam(sys_get_temp_dir(), '');
@@ -187,7 +153,6 @@ if ($results_exported_file_name === false)
 	throw new Exception('"tempnam" function failed.');
 }
 
-
 // write the string to the file
 $bytes_written = file_put_contents($results_exported_file_name, $results_exported_string_gz);
 
@@ -195,10 +160,6 @@ if ($bytes_written === false)
 {
 	throw new Exception('"file_put_contents" function failed.');
 }
-
-
-//------------------------------------------------------------------------------
-
 
 $subject = 'iqatest results ' . $id;
 
@@ -219,13 +180,8 @@ $body_text = <<<EOT
 EOT
 ;
 
-
 unset($tmp1);
 unset($tmp2);
-
-
-//------------------------------------------------------------------------------
-
 
 $mime = new Mail_mime();
 
@@ -258,23 +214,17 @@ $body = $mime->get();
 $headers = $mime->txtHeaders();
 //$headers = $mime->headers();
 
-
-//------------------------------------------------------------------------------
-
-
 // Send the results.
 if (!mail($to, $subject, $body, $headers))
 {
 	throw new Exception('"mail" function failed.');
 }
 
-
 // Delete the file.
 if (!unlink($results_exported_file_name))
 {
 	throw new Exception('"unlink" function failed.');
 }
-
 
 print(<<<EOT
 <p>Your results were submitted.</p>
@@ -283,17 +233,9 @@ print(<<<EOT
 EOT
 );
 
-
-//------------------------------------------------------------------------------
-
-
 }
 catch (Exception $e)
 {
-
-//------------------------------------------------------------------------------
-
-
 $subject = 'iqatest problem ' . $id;
 
 $tmp1 = var_export($_POST, true);
@@ -318,14 +260,9 @@ $body_text = <<<EOT
 EOT
 ;
 
-
 unset($tmp1);
 unset($tmp2);
 unset($tmp3);
-
-
-//------------------------------------------------------------------------------
-
 
 $mime = new Mail_mime();
 
@@ -344,10 +281,6 @@ $mime->setSubject($subject);
 $mime->setTxtBody($body_text);
 //$mime->setHTMLBody($body_html);
 
-
-//------------------------------------------------------------------------------
-
-
 // get() must be called before headers()
 $body = $mime->get();
 
@@ -355,19 +288,13 @@ $body = $mime->get();
 $headers = $mime->txtHeaders();
 //$headers = $mime->headers();
 
-
-//------------------------------------------------------------------------------
-
-
 // send the problem
 if (!mail($to, $subject, $body, $headers))
 {
 	throw new Exception('"mail" function failed.');
 }
 
-
 $tmp1 = $e->getMessage();
-
 
 print(<<<EOT
 <p>There was an error.  Your results were <b>not</b> submitted.</p>
@@ -378,14 +305,9 @@ print(<<<EOT
 EOT
 );
 
-
 unset($tmp1);
 
-
 }
-
-
-//------------------------------------------------------------------------------
 
 ?>
 

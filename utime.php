@@ -19,10 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
-//------------------------------------------------------------------------------
-
-
 /// return (as a string) the Unix timestamp with microsecond resolution
 /**
 \sa http://php.net/manual/en/function.gettimeofday.php
@@ -37,6 +33,5 @@ function utime($t = NULL)
 
 	return sprintf('%d.%06d', $t['sec'], $t['usec']);
 }
-
 
 ?>

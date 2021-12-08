@@ -37,21 +37,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <body>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <noscript style="color: red; font-weight: bold; font-size: larger;">
 <p><strong>JavaScript is disabled.</strong> You must <a href="https://www.google.com/search?q=enable+JavaScript">enable JavaScript</a> to participate in this experiment.</p>
 </noscript>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_informed_consent" style="display: block;">
 
@@ -102,11 +98,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <!--
 NOTE: html5 <form> can't have an empty action string
@@ -248,11 +242,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </form>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_instructions_first" style="display: none;">
 
@@ -283,11 +275,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_practice_image_comparison_1" style="display: none;">
 
@@ -324,11 +314,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_practice_image_comparison_2" style="display: none;">
 
@@ -365,11 +353,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_practice_image_comparison_3" style="display: none;">
 
@@ -406,11 +392,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_practice_image_comparison_4" style="display: none;">
 
@@ -447,11 +431,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_instructions_last" style="display: none;">
 
@@ -467,11 +449,9 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_image_comparison" style="display: none;">
 
@@ -511,20 +491,16 @@ NOTE: html5 <form> can't have an empty action string
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <!-- The images are loaded dynamically. -->
 <div id="div_images" style="display: none;"></div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <div id="div_debug" style="display: none; border: medium dotted blue;">
 
@@ -577,11 +553,9 @@ percent complete <output id="percent_complete"></output>
 
 </div>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 <form id="form_results" style="display: none; border: medium dotted red;" action="submit-results.php" method="post" onsubmit="javascript:return iqatest.encode_results();">
 
@@ -599,11 +573,9 @@ percent complete <output id="percent_complete"></output>
 
 </form>
 
-
 <!--
 /******************************************************************************/
 -->
-
 
 </body>
 
