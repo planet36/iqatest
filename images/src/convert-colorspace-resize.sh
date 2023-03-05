@@ -58,8 +58,8 @@ function print_usage
 	cat <<EOT
 Usage: ${SCRIPT_NAME} [-V] [-h] [-v] [-x SIZE_X] [-y SIZE_Y] ORIGINAL_IMAGE ...
 Create a reference image (and anti-reference image) of ORIGINAL_IMAGE by converting to gray-scale and resizing.
-  -V : Print the version information and exit.
-  -h : Print this message and exit.
+  -V : Print the version information, then exit.
+  -h : Print this message, then exit.
   -v : Print extra output. (default OFF)
   -x SIZE_X : The number of pixels on the X-axis. (default 384)
   -y SIZE_Y : The number of pixels on the Y-axis. (default 384)

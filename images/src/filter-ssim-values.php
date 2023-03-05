@@ -79,7 +79,7 @@ $limit    = $default_limit;
 //------------------------------------------------------------------------------
 
 
-/// Print the help message and exit.
+/// Print the help message, then exit.
 function print_help()
 {
 	global $script_name;
@@ -92,8 +92,8 @@ function print_help()
 	print(<<<EOT
 Usage: php $script_name [--version] [--help] [--verbose] [--min=MIN] [--max=MAX] [--inc=INC] METRICS_CSV_FILE ...
 Filter the METRICS_CSV_FILE(s) for SSIM values that are closest to values in the given range.
-  --version : Print the version information and exit.
-  --help : Print this message and exit.
+  --version : Print the version information, then exit.
+  --help : Print this message, then exit.
   --verbose : Print extra output. (default $default_verbose)
   --min=MIN : The minimum SSIM value. (default $default_ssim_min)
   --max=MAX : The maximum SSIM value. (default $default_ssim_max)
@@ -108,7 +108,7 @@ EOT
 }
 
 
-/// Print the version information and exit.
+/// Print the version information, then exit.
 function print_version()
 {
 	global $script_name;
@@ -133,14 +133,14 @@ function print_verbose($s)
 }
 
 
-/// Print the warning message and continue.
+/// Print the warning message.
 function print_warning($s)
 {
 	fwrite(STDERR, "Warning: $s\n");
 }
 
 
-/// Print the error message and exit.
+/// Print the error message, then exit.
 function print_error($s)
 {
 	global $script_name;

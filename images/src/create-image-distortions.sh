@@ -49,8 +49,8 @@ Usage: ${SCRIPT_NAME} [-V] [-h] [-v] REFERENCE_IMAGE ...
 Create image distortions of the REFERENCE_IMAGE(s).
 The types of distortion to be used are declared in "distortions.sh".
 Some types of distortion depend on octave.
-  -V : Print the version information and exit.
-  -h : Print this message and exit.
+  -V : Print the version information, then exit.
+  -h : Print this message, then exit.
   -v : Print extra output. (default OFF)
   REFERENCE_IMAGE : The reference image to create distortions of.
 EOT

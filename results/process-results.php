@@ -90,8 +90,8 @@ function print_help()
 	print(<<<EOT
 Usage: php $script_name [--version] [--help] [--verbose] RESULTS_PHP_FILE ...
 Process the RESULTS_PHP_FILE(s) and print the output in CSV format.
-  --version : Print the version information and exit.
-  --help : Print this message and exit.
+  --version : Print the version information, then exit.
+  --help : Print this message, then exit.
   --verbose : Print extra output. (default $default_verbose)
   RESULTS_PHP_FILE : A PHP file with results submitted from the iqatest.
 EOT
@@ -101,7 +101,7 @@ EOT
 }
 
 
-/// Print the version information and exit.
+/// Print the version information, then exit.
 function print_version()
 {
 	global $script_name;
@@ -126,14 +126,14 @@ function print_verbose($s)
 }
 
 
-/// Print the warning message and continue.
+/// Print the warning message.
 function print_warning($s)
 {
 	fwrite(STDERR, "Warning: $s\n");
 }
 
 
-/// Print the error message and exit.
+/// Print the error message, then exit.
 function print_error($s)
 {
 	global $script_name;

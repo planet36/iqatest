@@ -49,8 +49,8 @@ function print_usage
 	cat <<EOT
 Usage: ${SCRIPT_NAME} [-V] [-h] [-v] [-d DISTORTION] IMAGE_SET ...
 Create an image set with images from IMAGE_SET having distortion DISTORTION and matching particular metrics.
-  -V : Print the version information and exit.
-  -h : Print this message and exit.
+  -V : Print the version information, then exit.
+  -h : Print this message, then exit.
   -v : Print extra output. (default OFF)
   -d DISTORTION : The type of distortion of the images used in the image set. (default "quality")
   IMAGE_SET : The image set.

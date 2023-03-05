@@ -46,8 +46,8 @@ function print_usage
 	cat <<EOT
 Usage: ${SCRIPT_NAME} [-V] [-h] METRICS_CSV_FILE ...
 Segregate the distortions in the METRICS_CSV_FILE(s) to their own files.
-  -V : Print the version information and exit.
-  -h : Print this message and exit.
+  -V : Print the version information, then exit.
+  -h : Print this message, then exit.
   -v : Print extra output. (default OFF)
   METRICS_CSV_FILE : A CSV file with the metrics of distorted images.
 EOT

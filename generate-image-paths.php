@@ -26,7 +26,7 @@ $verbose  = $default_verbose;
 
 $debug  = $default_debug;
 
-/// Print the help message and exit.
+/// Print the help message, then exit.
 function print_help()
 {
 	global $script_name;
@@ -36,8 +36,8 @@ Usage: php $script_name [OPTIONS]
 Generate the JSON data structures to be used in the iqatest app.
 
 OPTIONS:
-  --version : Print the version information and exit.
-  --help : Print this message and exit.
+  --version : Print the version information, then exit.
+  --help : Print this message, then exit.
   --verbose : Print extra output.
   --debug : Print values of many data.
 
@@ -47,7 +47,7 @@ EOT
 	exit(0);
 }
 
-/// Print the version information and exit.
+/// Print the version information, then exit.
 function print_version()
 {
 	global $script_name;
@@ -72,13 +72,13 @@ function print_verbose($s)
 	}
 }
 
-/// Print the warning message and continue.
+/// Print the warning message.
 function print_warning($s)
 {
 	fwrite(STDERR, "Warning: $s\n");
 }
 
-/// Print the error message and exit.
+/// Print the error message, then exit.
 function print_error($s)
 {
 	global $script_name;

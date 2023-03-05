@@ -53,8 +53,8 @@ function print_usage
 Usage: ${SCRIPT_NAME} [-V] [-h] REFERENCE_IMAGE DISTORTED_IMAGE ...
 Calculate the image metrics of comparing the REFERENCE_IMAGE to the DISTORTED_IMAGE(s).
 The SSIM metric depends on octave.
-  -V : Print the version information and exit.
-  -h : Print this message and exit.
+  -V : Print the version information, then exit.
+  -h : Print this message, then exit.
   REFERENCE_IMAGE : The reference image.
   DISTORTED_IMAGE : The distorted image.
 EOT
