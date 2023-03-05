@@ -113,6 +113,7 @@ iqatest.image_comparisons_done = -1; // this is incremented when initialize() is
 for (var i = 0; i < iqatest.results.image_indexes.length; ++i)
 {
 	iqatest.max_image_comparisons += iqatest.results.image_indexes[i].length;
+}
 
 // load the images
 iqatest.load_images = function()
