@@ -32,7 +32,7 @@ function print_help()
 	global $script_name;
 
 	print(<<<EOT
-Usage: php $script_name [OPTIONS]
+Usage: php $script_name [OPTION]...
 Generate the JSON data structures to be used in the iqatest app.
 
 OPTIONS:
